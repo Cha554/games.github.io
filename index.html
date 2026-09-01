@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cha's Games</title>
+<title>Mist's Games</title>
 <link rel="icon" href="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -104,6 +104,8 @@
     footer b{color:var(--accent-h)}
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes fadeOut{from{opacity:1}to{opacity:0}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
     @media(max-width:768px){
         .nav-links{display:none}
@@ -128,7 +130,7 @@
             <div class="logo-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4m4 0h4M9 9v6m6-6v6"/><rect x="2" y="6" width="20" height="12" rx="3"/></svg>
             </div>
-            Cha's Games
+            Mist's Games
         </a>
         <ul class="nav-links" id="navLinks">
             <li><button onclick="switchTab('games')" id="nav-games">Games</button></li>
@@ -141,9 +143,12 @@
 </nav>
 
 <section class="hero">
-    <div class="hero-badge"><span class="badge-dot"></span>Free and unblocked</div>
-    <h1>Cha's <span class="accent-text">Games</span></h1>
-    <p class="hero-sub" id="main-subtitle">Made By Cha</p>
+    <div style="display: flex; gap: 12px; margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center;">
+        <div class="hero-badge"><span class="badge-dot"></span>Free and unblocked</div>
+        <div class="hero-badge" id="users-badge"><span class="badge-dot"></span><span id="user-count">1</span> active now</div>
+    </div>
+    <h1> Mist's <span class="accent-text">Games</span></h1>
+    <p class="hero-sub" id="main-subtitle">Made By Mist Services</p>
     <div class="hero-search">
         <input type="text" id="searchBar" placeholder="Search..." onkeyup="filterItems()" aria-label="Search">
         <span class="search-icon">
@@ -362,7 +367,294 @@
         { name: "Hop Masters", url: "https://script.google.com/macros/s/AKfycbwNy4zXsSbExk8y6K7XIeg68xNFxPG_06EXhu4dtlR8vyGfODTey-POqEXTxEi_HxboQQ/exec" },
         { name: "Steal Brainrot 2", url: "https://script.google.com/macros/s/AKfycbxJalyip_ETy_kolDAlSVxdcnLtn16P6gIoJ5kDwt1abHFX32SUJEOLCWU31veTffv2/exec" },
         { name: "Battle Soccer", url: "https://script.google.com/macros/s/AKfycbypNJTV2_4SaNeQ_yGszhhWdue30IzXRZnqpA9d3q9LnYVV_kulbaHCR_csPvFZ3MQf0A/exec" },
-        { name: "Ice Hockey", url: "https://script.google.com/macros/s/AKfycbyrV0taviLggEVl88GTQrd9J-caSQfxqraH6_Zu2evPkn4qI-qzO3nTibe7yFX5KW3Y/exec" }
+        { name: "Ice Hockey", url: "https://script.google.com/macros/s/AKfycbyrV0taviLggEVl88GTQrd9J-caSQfxqraH6_Zu2evPkn4qI-qzO3nTibe7yFX5KW3Y/exec" },
+        { name: "Friday Night Funkin vs Isaac", url: "https://kbhgames.com/game/friday-night-funkin-vs-isaac" },
+        { name: "FNF vs Fancy Pants 2", url: "https://kbhgames.com/game/friday-night-funkin-vs-fancy-pants-2" },
+        { name: "FNF: Minecraft Creeper vs Steve", url: "https://kbhgames.com/game/fnf-minecraft-creeper-vs-steve" },
+        { name: "FNF vs PARAPPA (Prince Fleaswallow)", url: "https://kbhgames.com/game/fnf-vs-parappa-prince-fleaswallow" },
+        { name: "Friday Night Funkin’ vs Cheese", url: "https://kbhgames.com/game/friday-night-funkin-vs-cheese" },
+        { name: "FNF: Expurgation RetroSpecter’s Remix", url: "https://kbhgames.com/game/fnf-expurgation-retrospecters-remix" },
+        { name: "Fine Night Funkout VS Clippy", url: "https://kbhgames.com/game/fine-night-funkout-vs-clippy" },
+        { name: "FNF Changed Mod", url: "https://kbhgames.com/game/friday-night-funkin-vs-the-changed-mod" },
+        { name: "FNF vs Shaggy Remastered", url: "https://kbhgames.com/game/fnf-vs-shaggy-remastered" },
+        { name: "Friday Night Funkin vs Weegeepie", url: "https://kbhgames.com/game/friday-night-funkin-vs-weegeepie" },
+        { name: "Friday Night Funkin’ vs Avenue", url: "https://kbhgames.com/game/friday-night-funkin-vs-avenue" },
+        { name: "Friday Night Bloxxin’ vs Roblox Noob", url: "https://kbhgames.com/game/friday-night-bloxxin-vs-roblox-noob" },
+        { name: "Friday Night Funkin’ vs Rosie", url: "https://kbhgames.com/game/friday-night-funkin-vs-rosie" },
+        { name: "Drunken Wrestle", url: "https://kbhgames.com/game/drunken-wrestle" },
+        { name: "FNF: Mid-Fight Masses Thicc Sarvente + Reanimated Ruv", url: "https://kbhgames.com/game/fnf-mid-fight-masses-thicc-sarvente-reanimated-ruv" },
+        { name: "Friday Night Funkin vs Taylor", url: "https://kbhgames.com/game/friday-night-funkin-vs-taylor" },
+        { name: "FNF vs Satoru Gojo (Jujutsu Kaisen)", url: "https://kbhgames.com/game/friday-night-funkin-vs-satoru-gojo-jujutsu-kaisen" },
+        { name: "FNF: Whitty Vs. Pico Remix Demolition", url: "https://kbhgames.com/game/fnf-whitty-vs-pico-remix-demolition" },
+        { name: "Friday Night Funkin vs Jeb", url: "https://kbhgames.com/game/friday-night-funkin-vs-jeb" },
+        { name: "Friday Night Funkin vs Conner", url: "https://kbhgames.com/game/friday-night-funkin-vs-conner" },
+        { name: "Pixel Samurai", url: "https://kbhgames.com/game/pixel-samurai" },
+        { name: "Friday Night Funkin Vs. GhostTwins", url: "https://kbhgames.com/game/friday-night-funkin-vs-ghosttwins" },
+        { name: "Friday Night Sandboxin’", url: "https://kbhgames.com/game/friday-night-sandboxin" },
+        { name: "Friday Night Funkin vs OMORI", url: "https://kbhgames.com/game/friday-night-funkin-vs-omori" },
+        { name: "FNF vs KOU (Kepler Observation Unit)", url: "https://kbhgames.com/game/friday-nigh-funkin-vs-kou-kepler-observation-unit" },
+        { name: "FNF: High Effort Test", url: "https://kbhgames.com/game/fnf-high-effort-test" },
+        { name: "Exit84", url: "https://kbhgames.com/game/exit84" },
+        { name: "FNF Vs. Tomato Dude", url: "https://kbhgames.com/game/friday-night-funkin-vs-tomato-dude" },
+        { name: "Friday Night Funkin Galaxy Mod", url: "https://kbhgames.com/game/friday-night-funkin-galaxy-mod" },
+        { name: "Friday Night Funkin with Brawl Stars", url: "https://kbhgames.com/game/friday-night-funkin-brawlstars-mod" },
+        { name: "FNF Vs. Sketchy Remastered", url: "https://kbhgames.com/game/friday-nigh-funkin-vs-sketchy-remastered" },
+        { name: "FNF vs Tricky Phrase 0", url: "https://kbhgames.com/game/friday-night-funkin-vs-tricky-phrase-0" },
+        { name: "Friday Night Funkin VS Fueg0", url: "https://kbhgames.com/game/friday-night-funkin-vs-fueg0" },
+        { name: "FNF Character Test Playground 2", url: "https://kbhgames.com/game/friday-night-funkin-character-test-playground-2" },
+        { name: "FNF Character Test Playground", url: "https://kbhgames.com/game/friday-night-funkin-character-test-playground" },
+        { name: "FNF: Mom vs Dad Divorcin Court", url: "https://kbhgames.com/game/friday-night-funkin-mom-vs-dad-divorcin-court" },
+        { name: "FNF vs Amogus: Among Us Drip", url: "https://kbhgames.com/game/fnf-vs-amogus-among-us-drip" },
+        { name: "Flip ‘n Fall", url: "https://kbhgames.com/game/flip-n-fall" },
+        { name: "Friday Night Funkin vs Codist", url: "https://kbhgames.com/game/friday-night-funkin-vs-codist" },
+        { name: "Zombie Mission 8", url: "https://kbhgames.com/game/zombie-mission-8" },
+        { name: "FNF vs Coralie: Peculiar Colours", url: "https://kbhgames.com/game/friday-night-funkin-vs-coralie-peculiar-colours" },
+        { name: "Friday Night Funkin’ vs Faraday", url: "https://kbhgames.com/game/friday-night-funkin-vs-faraday" },
+        { name: "FNF: Zardy Foolhardy Mod Pack", url: "https://kbhgames.com/game/fnf-zardy-foolhardy-mod-pack" },
+        { name: "Friday Night Funkin vs Knight", url: "https://kbhgames.com/game/friday-night-funkin-vs-knight" },
+        { name: "Friday Night Funkin vs Plate", url: "https://kbhgames.com/game/friday-night-funkin-vs-plate" },
+        { name: "FNF: B-Sides Duo Pack", url: "https://kbhgames.com/game/friday-night-funkin-b-sides-duo-pack" },
+        { name: "FNF: Pico X Boyfriend", url: "https://kbhgames.com/game/friday-night-funkin-pico-x-boyfriend" },
+        { name: "Friday Night Funkin X-RAY", url: "https://kbhgames.com/game/friday-night-funkin-x-ray" },
+        { name: "BoxBob", url: "https://kbhgames.com/game/boxbob" },
+        { name: "Friday Night Funkin vs Piconjo", url: "https://kbhgames.com/game/fnf-vs-piconjo" },
+        { name: "Radical Red Version", url: "https://kbhgames.com/game/pokemon-radical-red-version" },
+        { name: "FNF vs Monika (DDLC) Full Week", url: "https://kbhgames.com/game/friday-night-funkin-vs-monika-ddlc" },
+        { name: "Sonic 1995", url: "https://kbhgames.com/game/sonic-the-hedgehog-1995" },
+        { name: "Game Cafe Escape", url: "https://kbhgames.com/game/game-cafe-escape" },
+        { name: "Morty Elastic Man", url: "https://kbhgames.com/game/elastic-man" },
+        { name: "Sonic 1 EXE", url: "https://kbhgames.com/game/sonic-1-exe" },
+        { name: "Puppet Killer", url: "https://kbhgames.com/game/puppet-killer" },
+        { name: "Back Street Soccer", url: "https://kbhgames.com/game/back-street-soccer" },
+        { name: "Friday Night Funkin: The X Event Full Week", url: "https://kbhgames.com/game/friday-night-funkin-the-x-event" },
+        { name: "Minecraft Classic", url: "https://kbhgames.com/game/minecraft-classic" },
+        { name: "Wild Race", url: "https://kbhgames.com/game/wild-race" },
+        { name: "Street Fighter Alpha 3", url: "https://kbhgames.com/game/street-fighter-alpha-3" },
+        { name: "Duck Life: Battle", url: "https://kbhgames.com/game/duck-life-battle" },
+        { name: "Toon Cup 2019", url: "https://kbhgames.com/game/toon-cup-2019" },
+        { name: "Wolf Simulator 3D", url: "https://kbhgames.com/game/wolf-simulator" },
+        { name: "Crazy Stunt Cars Multiplayer", url: "https://kbhgames.com/game/crazy-stunt-cars-multiplayer" },
+        { name: "BasketBros", url: "https://kbhgames.com/game/basketbros" },
+        { name: "Cars 3 Demolition Derby", url: "https://kbhgames.com/game/cars-3-demolition-derby" },
+        { name: "Little Big Snake (.IO)", url: "https://kbhgames.com/game/little-big-snake-io" },
+        { name: "Bumper Bros: TMNT", url: "https://kbhgames.com/game/bumper-bros-tmnt" },
+        { name: "Teen Sonic in Sonic 1", url: "https://kbhgames.com/game/teen-sonic-in-sonic-1" },
+        { name: "Monster Girl Maker", url: "https://kbhgames.com/game/monster-girl-maker" },
+        { name: "Connect Four", url: "https://kbhgames.com/game/connect-four" },
+        { name: "Combat Reloaded", url: "https://kbhgames.com/game/combat-reloaded" },
+        { name: "Oregon Trail Deluxe Online", url: "https://kbhgames.com/game/oregon-trail-deluxe" },
+        { name: "Sonic 2 Anniversary Edition", url: "https://kbhgames.com/game/sonic-2-anniversary-edition" },
+        { name: "Merc Zone", url: "https://kbhgames.com/game/merc-zone" },
+        { name: "Sonic Powered", url: "https://kbhgames.com/game/sonic-powered" },
+        { name: "Touge Drift and Racing", url: "https://kbhgames.com/game/touge-drift-and-racing" },
+        { name: "Mine Blocks 2", url: "https://kbhgames.com/game/mine-blocks-2" },
+        { name: "Super Disc Dual 2", url: "https://kbhgames.com/game/super-disc-dual-2" },
+        { name: "Teen Titans Go: Rescue of Titans", url: "https://kbhgames.com/game/rescue-of-titans" },
+        { name: "PicoHot: SuperHot", url: "https://kbhgames.com/game/picohot-superhot" },
+        { name: "Extreme Car Stunts 3D", url: "https://kbhgames.com/game/extreme-car-stunts-3d" },
+        { name: "Tiger Simulator 3D", url: "https://kbhgames.com/game/tiger-simulator" },
+        { name: "The Floor is Lava: Apple & Onion", url: "https://kbhgames.com/game/the-floor-is-lava-apple-onion" },
+        { name: "Super Scratch Bros", url: "https://kbhgames.com/game/super-scratch-bros" },
+        { name: "Survivio", url: "https://kbhgames.com/game/surviv-io" },
+        { name: "Vex 4", url: "https://kbhgames.com/game/vex-4" },
+        { name: "Happy Room", url: "https://kbhgames.com/game/happy-room" },
+        { name: "Bike Blast", url: "https://kbhgames.com/game/bike-blast" },
+        { name: "Sonic CD", url: "https://kbhgames.com/game/sonic-cd" },
+        { name: "Wholesome Cats", url: "https://kbhgames.com/game/wholesome-cats" },
+        { name: "Troll Face Quest Video Games 2", url: "https://kbhgames.com/game/troll-face-quest-video-games-2" },
+        { name: "Big Shot Boxing", url: "https://kbhgames.com/game/big-shot-boxing" },
+        { name: "Pass Me", url: "https://kbhgames.com/game/pass-me" },
+        { name: "Surf’s Up Cartoon", url: "https://kbhgames.com/game/surfs-up" },
+        { name: "FNF Vs. Tricky Version 2.0 (Phase 3)", url: "https://kbhgames.com/game/fnf-vs-tricky-version-2-0" },
+        { name: "FNF vs Impostor Among Us v2", url: "https://kbhgames.com/game/friday-night-funkin-vs-impostor-among-us" },
+        { name: "Friday Night Funkin vs Shaggy v2", url: "https://kbhgames.com/game/friday-night-funkin-vs-shaggy" },
+        { name: "FNF vs TABI Ex Boyfriend", url: "https://kbhgames.com/game/fnf-vs-tabi-ex-boyfriend" },
+        { name: "Friday Night Funkin vs AGOTI", url: "https://kbhgames.com/game/friday-night-funkin-vs-agoti" },
+        { name: "Friday Night Funkin vs Bob", url: "https://kbhgames.com/game/friday-night-funkin-vs-bob" },
+        { name: "Friday Night Funkin: Pico School", url: "https://kbhgames.com/game/friday-night-funkin-pico-school" },
+        { name: "Friday Night Funkin Vs. Sans", url: "https://kbhgames.com/game/friday-night-funkin-vs-sans" },
+        { name: "FNF: Starlight Mayhem", url: "https://kbhgames.com/game/friday-night-funkin-starlight-mayhem" },
+        { name: "FNF SMG4 – If Mario Was In FNF Mod Pack", url: "https://kbhgames.com/game/fnf-smg4-if-mario-was-in-fnf-mod-pack" },
+        { name: "FNF: Funkin’ Nights at Freddy’s", url: "https://kbhgames.com/game/fnf-funkin-nights-at-freddys" },
+        { name: "FNF: Fanmade Vs. Tricky Phase 3", url: "https://kbhgames.com/game/fnf-fanmade-vs-tricky-phase-3" },
+        { name: "Friday Night Funkin vs Starving Artist", url: "https://kbhgames.com/game/friday-night-funkin-vs-starving-artist" },
+        { name: "Friday Night Funkin vs Trollface/Trollge", url: "https://kbhgames.com/game/fnf-vs-vs-trollface-trollge" },
+        { name: "FNF Gender Swap Mod Pack", url: "https://kbhgames.com/game/fnf-gender-swap-mod-pack" },
+        { name: "FNF: Summer Vacation", url: "https://kbhgames.com/game/friday-night-funkin-summer-vacation" },
+        { name: "FNF vs Pompom and Mackie", url: "https://kbhgames.com/game/friday-night-funkin-v-s-pompom" },
+        { name: "FNF: Playable Mom with Vocals", url: "https://kbhgames.com/game/fnf-playable-mom-vocals-for-all-songs" },
+        { name: "Friday Night Funkin vs NekoFreak", url: "https://kbhgames.com/game/friday-night-funkin-vs-nekofreak" },
+        { name: "FNF Vs. Bad Piggies", url: "https://kbhgames.com/game/five-night-funkin-vs-bad-piggies-from-angry-birds" },
+        { name: "FNF vs Chara the Monster boy", url: "https://kbhgames.com/game/fnf-vs-chara-monster-boy" },
+        { name: "FNF vs Garcello, but Bad", url: "https://kbhgames.com/game/fnf-vs-garcello-but-bad" },
+        { name: "FNF: The Blueballs Incident (Trollge)", url: "https://kbhgames.com/game/fnf-the-blueballs-incident-trollge" },
+        { name: "FNF: Friday Night Gaming vs Loki", url: "https://kbhgames.com/game/fnf-friday-night-gaming-vs-loki" },
+        { name: "FNF Vs Garcello Retrospecter Release", url: "https://kbhgames.com/game/fnf-vs-garcello-retrospecter-release-remix" },
+        { name: "FNF: Viernes Night Funkin’", url: "https://kbhgames.com/game/fnf-viernes-night-funkin" },
+        { name: "FNF: Pico Night Funkin", url: "https://kbhgames.com/game/fnf-pico-night-funkin" },
+        { name: "FNF Internet’s Down", url: "https://kbhgames.com/game/fnf-internets-down" },
+        { name: "Friday Night Funkin vs Dusttale Sans", url: "https://kbhgames.com/game/friday-night-funkin-vs-dusttale-sans" },
+        { name: "FNF vs Crazy Girlfriend", url: "https://kbhgames.com/game/fnf-vs-crazy-girlfriend" },
+        { name: "FNF: Eddsworlds Funky Beats", url: "https://kbhgames.com/game/fnf-eddsworlds-funky-beats" },
+        { name: "FNF: Beep Power", url: "https://kbhgames.com/game/fnf-beep-power" },
+        { name: "FNF Whitty Ballistic Retro Specter Remix", url: "https://kbhgames.com/game/fnf-whitty-ballistic-retro-specter-remix" },
+        { name: "FNF vs Outrun Cartoon Cat", url: "https://kbhgames.com/game/fnf-vs-outrun-cartoon-cat" },
+        { name: "FNF: Cuphead a Noisy Adventure!", url: "https://kbhgames.com/game/fnf-cuphead-a-noisy-adventure" },
+        { name: "FNF vs Matt WIIK 3 (Fanmade)", url: "https://kbhgames.com/game/fnf-vs-matt-wiik-3-fanmade" },
+        { name: "Friday Night Funkin UpSide", url: "https://kbhgames.com/game/friday-night-funkin-upside" },
+        { name: "Friday Night Funkin’ VS Cyrix", url: "https://kbhgames.com/game/friday-night-funkin-vs-cyrix" },
+        { name: "Friday Night Funkin: MCYT ModPack", url: "https://kbhgames.com/game/friday-night-funkin-mcyt-modpack" },
+        { name: "FNF: Tabi Genocide Retrospecter Remix", url: "https://kbhgames.com/game/fnf-tabi-genocide-retrospecter-remix" },
+        { name: "FNF Clay Mod", url: "https://kbhgames.com/game/fnf-clay-mod" },
+        { name: "Friday Night Funkin V.S. Sanford", url: "https://kbhgames.com/game/friday-night-funkin-v-s-sanford" },
+        { name: "Friday Night Funkin’ Sarvente’s Mid-Fight Masses", url: "https://kbhgames.com/game/friday-night-funkin-sarventes-mid-fight-masses" },
+        { name: "Friday Night Funkin’ V.S. Whitty Full Week", url: "https://kbhgames.com/game/friday-night-funkin-v-s-whitty-full-week" },
+        { name: "Friday Night Funkin VS Sky Full Week", url: "https://kbhgames.com/game/friday-night-funkin-vs-sky-full-week" },
+        { name: "Friday Night Funkin VS Garcello", url: "https://kbhgames.com/game/friday-night-funkin-vs-garcello" },
+        { name: "Friday Night Funkin’ Vs Tricky the Clown Mod", url: "https://kbhgames.com/game/friday-night-funkin-the-tricky-mod" },
+        { name: "Friday Night Funkin Vs. Hex Mod Full Week", url: "https://kbhgames.com/game/friday-night-funkin-vs-hex-mod-full-week" },
+        { name: "Friday Night Funkin’ + Hatsune Miku", url: "https://kbhgames.com/game/friday-night-funkin-hatsune-miku" },
+        { name: "Bleach Vs Naruto 3.3", url: "https://kbhgames.com/game/bleach-vs-naruto-3" },
+        { name: "Friday Night Funkin, but Bad", url: "https://kbhgames.com/game/friday-night-funkin-but-bad" },
+        { name: "Temple Run 2 Online", url: "https://kbhgames.com/game/temple-run-2-online" },
+        { name: "FNF vs Tord/Tom/Edd", url: "https://kbhgames.com/game/friday-night-funkin-vs-tord" },
+        { name: "Friday Night Funkin HD", url: "https://kbhgames.com/game/friday-night-funkin-hd" },
+        { name: "Friday Night Funkin’ Neo", url: "https://kbhgames.com/game/friday-night-funkin-neo" },
+        { name: "Five Nights at Freddy’s 2", url: "https://kbhgames.com/game/five-nights-freddys-2" },
+        { name: "Friday Night Funkin’ B-Side Remixes", url: "https://kbhgames.com/game/friday-night-funkin-b-side-remixes" },
+        { name: "Friday Night Funkin Vs Matt 2.0", url: "https://kbhgames.com/game/friday-night-funkin-vs-matt-from-wii-sports" },
+        { name: "FNF: V.S. Tankman High Effort Ugh 2.0", url: "https://kbhgames.com/game/fnf-v-s-tankman-high-effort-ugh-2-0" },
+        { name: "Bullet Force", url: "https://kbhgames.com/game/bullet-force" },
+        { name: "Friday Night Funkin VS. KAPI", url: "https://kbhgames.com/game/friday-night-funkin-vs-kapi" },
+        { name: "Friday Night Funkin: Sonic Skin Mod", url: "https://kbhgames.com/game/friday-night-funkin-sonic-skin-mod" },
+        { name: "Friday Night Funkin VS Carol v2", url: "https://kbhgames.com/game/friday-night-funkin-vs-carol-v2" },
+        { name: "Friday Night Funkin’: Foned In (FNF Mobile)", url: "https://kbhgames.com/game/friday-night-funkin-foned-in-fnf-mobile" },
+        { name: "Your Turn To Die", url: "https://kbhgames.com/game/your-turn-to-die" },
+        { name: "FNF: Everywhere At The End Of Funk", url: "https://kbhgames.com/game/fnf-everywhere-at-the-end-of-funk" },
+        { name: "FNF: Friday Night Vibin’ UTAU Cover", url: "https://kbhgames.com/game/fnf-friday-night-vibin-utau-cover" },
+        { name: "Light Platinum", url: "https://kbhgames.com/game/pokemon-light-platinum" },
+        { name: "Friday Night Funkin’ Duo Pack", url: "https://kbhgames.com/game/friday-night-funkin-duo-pack" },
+        { name: "Friday Night Funkin’ CG5 Edition Full Week", url: "https://kbhgames.com/game/friday-night-funkin-cg5-edition-full-week" },
+        { name: "Sonic Classic Heroes", url: "https://kbhgames.com/game/sonic-classic-heroes" },
+        { name: "Friday Night Funkin’ B3 REMIXED", url: "https://kbhgames.com/game/friday-night-funkin-b3-remixed" },
+        { name: "FNF Vs Zardy & Ronald Mcdonald", url: "https://kbhgames.com/game/vs-zardy-ronald-mcdonald" },
+        { name: "Friday Night Funkin’ With Shyrell MOD", url: "https://kbhgames.com/game/friday-night-funkin-with-shyrell-mod" },
+        { name: "Floating Sandbox", url: "https://kbhgames.com/game/floating-sandbox" },
+        { name: "Five Nights at Freddy’s", url: "https://kbhgames.com/game/five-nights-freddys-online" },
+        { name: "Ash Gray", url: "https://kbhgames.com/game/pokemon-ash-gray" },
+        { name: "The World’s Easyest Game", url: "https://kbhgames.com/game/the-world-easyest-game" },
+        { name: "Dragon Ball Z: Supersonic Warriors", url: "https://kbhgames.com/game/dragon-ball-z-supersonic-warriors" },
+        { name: "Friday Night Funkin’ vs Annie", url: "https://kbhgames.com/game/friday-night-funkin-vs-annie" },
+        { name: "Dragon Ball Z: Buu’s Fury", url: "https://kbhgames.com/game/dragon-ball-z-buus-fury" },
+        { name: "Tank Trouble 4", url: "https://kbhgames.com/game/tank-trouble-4" },
+        { name: "MADNESS: Off-Color", url: "https://kbhgames.com/game/madness-off-color" },
+        { name: "Stick it to the Stickman", url: "https://kbhgames.com/game/stick-it-to-the-stickman" },
+        { name: "Drunken Table Wars", url: "https://kbhgames.com/game/drunken-table-wars" },
+        { name: "Castle Crashing the Beard HD", url: "https://kbhgames.com/game/castle-crashing-the-beard-hd" },
+        { name: "Adventure Time Break The Worm", url: "https://kbhgames.com/game/adventure-time-break-the-worm" },
+        { name: "Football Legends 2021", url: "https://kbhgames.com/game/football-legends-2021" },
+        { name: "Jungle Hero 2", url: "https://kbhgames.com/game/jungle-hero-2" },
+        { name: "Zombie Parade Defense 3", url: "https://kbhgames.com/game/zombie-parade-defense-3" },
+        { name: "Castle Wars: Middle Ages", url: "https://kbhgames.com/game/castle-wars-middle-ages" },
+        { name: "Cartoon Network: Skate Rush", url: "https://kbhgames.com/game/cartoon-network-skate-rush" },
+        { name: "Rally Point", url: "https://kbhgames.com/game/rally-point" },
+        { name: "Craig of the Creek: Recycle Squad", url: "https://kbhgames.com/game/craig-of-the-creek-recycle-squad" },
+        { name: "Gunner", url: "https://kbhgames.com/game/gunner" },
+        { name: "Fly THIS!", url: "https://kbhgames.com/game/fly-this" },
+        { name: "Top Speed Racing 3D", url: "https://kbhgames.com/game/top-speed-racing-3d" },
+        { name: "Zombie Killer", url: "https://kbhgames.com/game/zombie-killer" },
+        { name: "Underneath", url: "https://kbhgames.com/game/underneath" },
+        { name: "The Fall of Catzahstan", url: "https://kbhgames.com/game/the-fall-of-catzahstan" },
+        { name: "The Rise Of Dracula", url: "https://kbhgames.com/game/the-rise-of-dracula" },
+        { name: "Jump Forge", url: "https://kbhgames.com/game/jump-forge" },
+        { name: "Lotus Armageddon", url: "https://kbhgames.com/game/lotus-armageddon" },
+        { name: "Top Outpost", url: "https://kbhgames.com/game/top-outpost" },
+        { name: "Goldun", url: "https://kbhgames.com/game/goldun" },
+        { name: "TOO FAST", url: "https://kbhgames.com/game/too-fast" },
+        { name: "Deepest Sword", url: "https://kbhgames.com/game/deepest-sword" },
+        { name: "Red Handed", url: "https://kbhgames.com/game/red-handed" },
+        { name: "Sort Among Us", url: "https://kbhgames.com/game/sort-among-us" },
+        { name: "A Taste of the Past", url: "https://kbhgames.com/game/a-taste-of-the-past" },
+        { name: "Conduct THIS!", url: "https://kbhgames.com/game/conduct-this" },
+        { name: "Admin", url: "https://kbhgames.com/game/admin" },
+        { name: "Jumphase", url: "https://kbhgames.com/game/jumphase" },
+        { name: "I’m Outta Here", url: "https://kbhgames.com/game/im-outta-here" },
+        { name: "Pink", url: "https://kbhgames.com/game/pink" },
+        { name: "Chill Out", url: "https://kbhgames.com/game/chill-out" },
+        { name: "Alice in the maze", url: "https://kbhgames.com/game/alice-in-the-maze" },
+        { name: "Laser Push", url: "https://kbhgames.com/game/laser-push" },
+        { name: "One Screen Run 2", url: "https://kbhgames.com/game/one-screen-run-2" },
+        { name: "Rope Slash 2", url: "https://kbhgames.com/game/rope-slash-2" },
+        { name: "Tower of the Scorched Sea", url: "https://kbhgames.com/game/tower-of-the-scorched-sea" },
+        { name: "Push The Box 3D", url: "https://kbhgames.com/game/push-the-box-3d" },
+        { name: "Sticky Friends", url: "https://kbhgames.com/game/sticky-friends" },
+        { name: "SCOPE Room Escape", url: "https://kbhgames.com/game/scope" },
+        { name: "Pixel Detective", url: "https://kbhgames.com/game/pixel-detective" },
+        { name: "Shaun The Sheep Sheep Stack", url: "https://kbhgames.com/game/shaun-the-sheep-sheep-stack" },
+        { name: "Flower Escape", url: "https://kbhgames.com/game/flower-escape" },
+        { name: "Cats n Wires", url: "https://kbhgames.com/game/cats-n-wires" },
+        { name: "Telepobox", url: "https://kbhgames.com/game/telepobox" },
+        { name: "Fist Bump", url: "https://kbhgames.com/game/fist-bump" },
+        { name: "FLIPTRIS", url: "https://kbhgames.com/game/fliptris" },
+        { name: "Millionaire Trivia", url: "https://kbhgames.com/game/millionaire-trivia" },
+        { name: "Pirate Fox Detective: The Case of The Conspicuous Klawz Crew", url: "https://kbhgames.com/game/pirate-fox-detective-the-case-of-the-conspicuous-klawz-crew" },
+        { name: "Rain on Your Parade Prologue", url: "https://kbhgames.com/game/rain-on-your-parade-prologue" },
+        { name: "Two Ball 3D: Dark", url: "https://kbhgames.com/game/two-ball-3d-dark" },
+        { name: "Stickman Supreme Duelist 2", url: "https://kbhgames.com/game/stickman-supreme-duelist-2" },
+        { name: "MX OffRoad Mountain Bike", url: "https://kbhgames.com/game/mx-offroad-mountain-bike" },
+        { name: "Tic Tac Toe Mania", url: "https://kbhgames.com/game/tic-tac-toe-mania" },
+        { name: "Pocket League 3D", url: "https://kbhgames.com/game/pocket-league-3d" },
+        { name: "Soccer Heads", url: "https://kbhgames.com/game/soccer-heads" },
+        { name: "Zombie Mission 7", url: "https://kbhgames.com/game/zombie-mission-7" },
+        { name: "Fiveheads Soccer", url: "https://kbhgames.com/game/fiveheads-soccer" },
+        { name: "Mineworld Horror: The Mansion", url: "https://kbhgames.com/game/mineworld-horror-the-mansion" },
+        { name: "Ragdoll Fall", url: "https://kbhgames.com/game/ragdoll-fall" },
+        { name: "Gun Knight", url: "https://kbhgames.com/game/gun-knight" },
+        { name: "Gun Orphan", url: "https://kbhgames.com/game/gun-orphan" },
+        { name: "The Lost Night", url: "https://kbhgames.com/game/the-lost-night" },
+        { name: "Bullet Heaven 3", url: "https://kbhgames.com/game/bullet-heaven-3" },
+        { name: "Super Raft Boat", url: "https://kbhgames.com/game/super-raft-boat" },
+        { name: "Noir: Deinitialize", url: "https://kbhgames.com/game/noir-deinitialize" },
+        { name: "Pixel Crisis", url: "https://kbhgames.com/game/pixel-crisis" },
+        { name: "Dick Tracy (Sega)", url: "https://kbhgames.com/game/dick-tracy-sega" },
+        { name: "Pokemon Darkfire", url: "https://kbhgames.com/game/pokemon-darkfire" },
+        { name: "Pokemon Demon Island", url: "https://kbhgames.com/game/pokemon-demon-island" },
+        { name: "Heat: Rebirth", url: "https://kbhgames.com/game/heat-rebirth" },
+        { name: "NextDoor", url: "https://kbhgames.com/game/nextdoor" },
+        { name: "Senya and Oscar 2", url: "https://kbhgames.com/game/senya-and-oscar-2" },
+        { name: "Virtual Bart Redux", url: "https://kbhgames.com/game/virtual-bart-redux" },
+        { name: "Cursed Travels: Flame of the Banshee", url: "https://kbhgames.com/game/cursed-travels-flame-of-the-banshee" },
+        { name: "Stick War Legacy 2", url: "https://kbhgames.com/game/stick-war-legacy-2" },
+        { name: "Castle Constructor", url: "https://kbhgames.com/game/castle-constructor" },
+        { name: "Power The Grid", url: "https://kbhgames.com/game/power-the-grid" },
+        { name: "FE8: The Eligor’s Spear", url: "https://kbhgames.com/game/fe-8-the-eligors-spear" },
+        { name: "Guild Of Zany", url: "https://kbhgames.com/game/guild-of-zany" },
+        { name: "Warfare Classic", url: "https://kbhgames.com/game/warfare-classic" },
+        { name: "Assault Bots", url: "https://kbhgames.com/game/assault-bots" },
+        { name: "Exploder.io", url: "https://kbhgames.com/game/exploder-io" },
+        { name: "TankRoyale.io", url: "https://kbhgames.com/game/tankroyale-io" },
+        { name: "Crosswords Arena", url: "https://kbhgames.com/game/crosswords-arena" },
+        { name: "FNF: UGH Pack", url: "https://kbhgames.com/game/fnf-ugh-pack" },
+        { name: "FNF: SiIvagunner Corruption Pack", url: "https://kbhgames.com/game/fnf-siivagunner-corruption-pack" },
+        { name: "Wink GameBoy", url: "https://kbhgames.com/game/wink-gameboy" },
+        { name: "Hinotori Rhythm", url: "https://kbhgames.com/game/hinotori-rhythm" },
+        { name: "Quantum Geometry", url: "https://kbhgames.com/game/quantum-geometry" },
+        { name: "Dino Rex", url: "https://kbhgames.com/game/dino-rex" },
+        { name: "The Last Guy", url: "https://kbhgames.com/game/the-last-guy" },
+        { name: "Spirit Dungeons", url: "https://kbhgames.com/game/spirit-dungeons" },
+        { name: "MOLE", url: "https://kbhgames.com/game/mole" },
+        { name: "BOBA Platformer", url: "https://kbhgames.com/game/boba-platformer" },
+        { name: "IsoCubes", url: "https://kbhgames.com/game/isocubes" },
+        { name: "Microsoft Word Twister", url: "https://kbhgames.com/game/microsoft-word-twister" },
+        { name: "Loihtija", url: "https://kbhgames.com/game/loihtija" },
+        { name: "FNF: Friday Night Sussin", url: "https://kbhgames.com/game/fnf-friday-night-sussin" },
+        { name: "Friday Night Funkin V.S. Flexy & Merchant", url: "https://kbhgames.com/game/friday-night-funkin-v-s-flexy-full-week" },
+        { name: "Friday Night Funkin vs Weegee", url: "https://kbhgames.com/game/friday-night-funkin-vs-weegee" },
+        { name: "Friday Night Funkin vs Dave/Bambi", url: "https://kbhgames.com/game/fnf-vs-dave-bambi-full-week" },
+        { name: "Friday Night Funkin vs Onek", url: "https://kbhgames.com/game/friday-night-funkin-vs-onek" },
+        { name: "Blob Opera", url: "https://kbhgames.com/game/blob-opera" },
+        { name: "Pizza Tower", url: "https://kbhgames.com/game/pizza-tower" },
+        { name: "FNF: Spinel vs. Steven", url: "https://kbhgames.com/game/fnf-spinel-vs-steven" }
     ];
 
     const movies = [
@@ -372,6 +664,103 @@
         { name: "An Extremely Goofy Movie", url: "https://drive.google.com/file/d/1uH6tzn26qa5bbVp3RNUxuANcYd5G-3zP/preview" },
         { name: "Moana", url: "https://drive.google.com/file/d/1jvUEJm-zNFj3JwUDicd0gvutkqrP9HxV/preview" }
     ];
+
+    // ---------------------------------------------------------
+    // ACTIVE USERS TRACKER
+    // ---------------------------------------------------------
+    function initializeUserTracker() {
+        const SESSION_KEY = 'mist_games_session_id';
+        const USERS_KEY = 'mist_games_active_users';
+        const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+
+        // Create or get session ID
+        let sessionId = sessionStorage.getItem(SESSION_KEY);
+        if (!sessionId) {
+            sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem(SESSION_KEY, sessionId);
+        }
+
+        // Initialize or get active users object
+        let activeUsers = {};
+        const stored = localStorage.getItem(USERS_KEY);
+        if (stored) {
+            try {
+                activeUsers = JSON.parse(stored);
+            } catch (e) {
+                activeUsers = {};
+            }
+        }
+
+        // Add/update current session
+        activeUsers[sessionId] = Date.now();
+
+        // Clean up expired sessions
+        const now = Date.now();
+        Object.keys(activeUsers).forEach(id => {
+            if (now - activeUsers[id] > SESSION_TIMEOUT) {
+                delete activeUsers[id];
+            }
+        });
+
+        // Save updated users
+        localStorage.setItem(USERS_KEY, JSON.stringify(activeUsers));
+
+        // Update display
+        updateUserCount();
+
+        // Update periodically
+        setInterval(() => {
+            // Update current user's timestamp
+            let users = {};
+            const stored = localStorage.getItem(USERS_KEY);
+            if (stored) {
+                try {
+                    users = JSON.parse(stored);
+                } catch (e) {
+                    users = {};
+                }
+            }
+
+            users[sessionId] = Date.now();
+
+            // Clean up expired sessions
+            const now = Date.now();
+            Object.keys(users).forEach(id => {
+                if (now - users[id] > SESSION_TIMEOUT) {
+                    delete users[id];
+                }
+            });
+
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+            updateUserCount();
+        }, 5000); // Update every 5 seconds
+    }
+
+    function updateUserCount() {
+        const USERS_KEY = 'mist_games_active_users';
+        let activeUsers = {};
+        const stored = localStorage.getItem(USERS_KEY);
+        if (stored) {
+            try {
+                activeUsers = JSON.parse(stored);
+            } catch (e) {
+                activeUsers = {};
+            }
+        }
+
+        const count = Math.max(1, Object.keys(activeUsers).length);
+        const countEl = document.getElementById('user-count');
+        if (countEl) {
+            countEl.textContent = count;
+        }
+    }
+
+    // Start tracking when page loads
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeUserTracker);
+    } else {
+        initializeUserTracker();
+    }
 
     // ---------------------------------------------------------
     // 2. GRID GENERATION
@@ -442,14 +831,14 @@
             movieBtns.forEach(b => b && b.classList.remove('active'));
             gameGrid.classList.remove('hidden');
             movieGrid.classList.add('hidden');
-            subtitle.innerText = "Games By Cha";
+            subtitle.innerText = "Games By Mist Services";
             revealCards(gameGrid);
         } else {
             gameBtns.forEach(b => b && b.classList.remove('active'));
             movieBtns.forEach(b => b && b.classList.add('active'));
             gameGrid.classList.add('hidden');
             movieGrid.classList.remove('hidden');
-            subtitle.innerText = "Movies By Cha";
+            subtitle.innerText = "Movies By Mist Services";
             revealCards(movieGrid);
         }
         updateCount();
@@ -460,33 +849,81 @@
     // 4. CLOAKED LAUNCHER
     // ---------------------------------------------------------
     function launch(url) {
-        const win = window.open('about:blank', '_blank');
-        if (!win) { alert("Pop-ups are blocked! Please allow them."); return; }
+        // For KBH Games, route through webfuse proxy
+        if (url.includes('kbhgames.com')) {
+            url = 'https://demo.webfuse.com/+iframetest?url=' + encodeURIComponent(url);
+        }
 
-        const html = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Google Drive</title>
-                <link rel="icon" href="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png">
-                <style>
-                    body { margin:0; padding:0; height:100vh; background:#000; overflow:hidden; }
-                    iframe { width:100%; height:100%; border:none; display:block; }
-                </style>
-            </head>
-            <body>
-                <iframe src="${url}" allowfullscreen></iframe>
-                <script>
-                    window.addEventListener('keydown', (e) => {
-                        if (e.key === "Escape") window.location.replace("https://drive.google.com");
-                    });
-                <\/script>
-            </body>
-            </html>
+        // Modal for all games
+        const modal = document.createElement('div');
+        modal.id = 'game-modal';
+        modal.style.cssText = `
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease-out;
         `;
 
-        win.document.write(html);
-        win.document.close();
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '✕ Close (ESC)';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100000;
+            background: var(--accent);
+            color: #1e1812;
+            border: none;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px var(--shadow);
+        `;
+        closeBtn.onmouseover = () => { closeBtn.style.transform = 'scale(1.05)'; closeBtn.style.boxShadow = '0 6px 20px var(--shadow)'; };
+        closeBtn.onmouseout = () => { closeBtn.style.transform = 'scale(1)'; closeBtn.style.boxShadow = '0 4px 12px var(--shadow)'; };
+
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.style.cssText = `
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        `;
+        iframe.allowFullscreen = true;
+
+        const closeModal = () => {
+            modal.style.animation = 'fadeOut 0.2s ease-out forwards';
+            setTimeout(() => modal.remove(), 200);
+        };
+
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('game-modal')) closeModal();
+        });
+
+        modal.appendChild(closeBtn);
+        modal.appendChild(iframe);
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+
+        const cleanupObserver = new MutationObserver(() => {
+            if (!document.getElementById('game-modal')) {
+                document.body.style.overflow = '';
+                cleanupObserver.disconnect();
+            }
+        });
+        cleanupObserver.observe(document.body, { childList: true });
     }
 
     // ---------------------------------------------------------
@@ -532,7 +969,9 @@
     })();
 
     window.addEventListener('keydown', (e) => {
-        if (e.key === "Escape") window.location.replace("https://drive.google.com");
+        if (e.key === "Escape" && !document.getElementById('game-modal')) {
+            window.location.replace("https://drive.google.com");
+        }
     });
 
     updateCount();
