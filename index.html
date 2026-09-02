@@ -811,6 +811,19 @@
         }
     }
 
+    /* Force open in a brand new tab (more reliable than target="_blank" on school networks) */
+    function openGame(url, id){
+        if(id) addRecent(id);
+        const finalUrl = webfuseUrl(url);
+        // Try window.open first
+        const win = window.open(finalUrl, "_blank", "noopener,noreferrer");
+        // Fallback if popup was blocked
+        if(!win || win.closed || typeof win.closed === "undefined"){
+            // last resort: navigate current tab
+            location.href = finalUrl;
+        }
+    }
+
     const IC={
         heart:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
         heartFill:'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
@@ -839,7 +852,7 @@
     /* Recent */
     function addRecent(id){prefs.recent=[id,...prefs.recent.filter(r=>r!==id)].slice(0,8);savePrefs(prefs);renderRecent()}
     function clearRecent(){prefs.recent=[];savePrefs(prefs);renderRecent();toast("Recently played cleared","warn")}
-    function renderRecent(){if(!prefs.recent.length||state.favFilter){recentSec.classList.remove("visible");return}recentSec.classList.add("visible");const a=[...GAMES,...SECRET_GAMES];recentRow.innerHTML=prefs.recent.map(id=>{const g=a.find(x=>x.id===id);if(!g)return'';return`<a class="recent-card" href="${webfuseUrl(g.url)}" target="_blank" rel="noopener" onclick="addRecent(${g.id})"><div class="rc-title">${g.title}</div><div class="rc-cat">${g.cat}</div></a>`}).join("")}
+    function renderRecent(){if(!prefs.recent.length||state.favFilter){recentSec.classList.remove("visible");return}recentSec.classList.add("visible");const a=[...GAMES,...SECRET_GAMES];recentRow.innerHTML=prefs.recent.map(id=>{const g=a.find(x=>x.id===id);if(!g)return'';return`<a class="recent-card" href="javascript:void(0)" onclick="openGame('${g.url.replace(/'/g,"\\'")}','${g.id}')"><div class="rc-title">${g.title}</div><div class="rc-cat">${g.cat}</div></a>`}).join("")}
 
     /* Category / Filter / View */
     function renderCatTabs(){catTabs.innerHTML=CATEGORIES.map(c=>`<button class="cat-tab${state.category===c?' active':''}" onclick="setCat('${c}')">${c}</button>`).join("")}
@@ -849,7 +862,7 @@
 
     /* Render Games */
     function getFilteredGames(){let l=[...GAMES];if(state.favFilter)l=l.filter(g=>isFav(g.id));else if(state.category!=="All")l=l.filter(g=>g.cat===state.category);if(state.search.trim()){const q=state.search.toLowerCase().trim();l=l.filter(g=>g.title.toLowerCase().includes(q)||g.cat.toLowerCase().includes(q))}const s=sortSel.value;if(s==="az")l.sort((a,b)=>a.title.localeCompare(b.title));else if(s==="za")l.sort((a,b)=>b.title.localeCompare(a.title));else if(s==="recent")l.sort((a,b)=>(prefs.recent.indexOf(b.id)-prefs.recent.indexOf(a.id)));return l}
-    function renderGames(){const f=getFilteredGames();gameCount.textContent=`${f.length} game${f.length!==1?'s':''}`;if(!f.length){grid.innerHTML=`<div class="empty-state">${IC.heartEmpty}<h3>${state.favFilter?"No favorites yet":"No games found"}</h3><p>${state.favFilter?"Click the heart on any game to save it here.":"Try a different search or category."}</p></div>`;return}grid.innerHTML=f.map((g,i)=>{const fv=isFav(g.id);const ic=CAT_ICONS[g.cat]||CAT_ICONS.Action;return`<a class="game-btn-card" href="${webfuseUrl(g.url)}" target="_blank" rel="noopener" style="transition-delay:${i*30}ms" onclick="addRecent(${g.id})"><div class="game-btn-icon">${ic}</div><div class="game-btn-text"><span class="btn-title">${g.title}</span><span class="btn-cat">${g.cat}</span></div><span class="game-btn-arrow">${IC.arrow}</span><button class="game-btn-fav${fv?' faved':''}" onclick="toggleFav(${g.id},event)" aria-label="${fv?'Remove from':'Add to'} favorites">${fv?IC.heartFill:IC.heart}</button></a>`}).join("");requestAnimationFrame(()=>{grid.querySelectorAll(".game-btn-card").forEach(c=>c.classList.add("visible"))})}
+    function renderGames(){const f=getFilteredGames();gameCount.textContent=`${f.length} game${f.length!==1?'s':''}`;if(!f.length){grid.innerHTML=`<div class="empty-state">${IC.heartEmpty}<h3>${state.favFilter?"No favorites yet":"No games found"}</h3><p>${state.favFilter?"Click the heart on any game to save it here.":"Try a different search or category."}</p></div>`;return}grid.innerHTML=f.map((g,i)=>{const fv=isFav(g.id);const ic=CAT_ICONS[g.cat]||CAT_ICONS.Action;const safeUrl=g.url.replace(/'/g,"\\'");return`<a class="game-btn-card" href="javascript:void(0)" style="transition-delay:${i*30}ms" onclick="openGame('${safeUrl}',${g.id})"><div class="game-btn-icon">${ic}</div><div class="game-btn-text"><span class="btn-title">${g.title}</span><span class="btn-cat">${g.cat}</span></div><span class="game-btn-arrow">${IC.arrow}</span><button class="game-btn-fav${fv?' faved':''}" onclick="toggleFav(${g.id},event)" aria-label="${fv?'Remove from':'Add to'} favorites">${fv?IC.heartFill:IC.heart}</button></a>`}).join("");requestAnimationFrame(()=>{grid.querySelectorAll(".game-btn-card").forEach(c=>c.classList.add("visible"))})}
 
     function resetView(){state.search="";state.category="All";state.favFilter=false;searchIn.value="";prefs.category="All";savePrefs(prefs);sortSel.value="default";renderCatTabs();updateFavUI();renderGames();renderRecent();window.scrollTo({top:0,behavior:"smooth"});$("navLinks").classList.remove("open")}
 
@@ -1149,12 +1162,12 @@
     document.addEventListener("keydown",e=>{if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT')return;keyBuffer+=e.key;clearTimeout(keyTimer);keyTimer=setTimeout(()=>{keyBuffer=""},1600);if(keyBuffer.endsWith("857522")&&!superSecretOpen&&!secretOpen)openSuperSecret();else if(keyBuffer.endsWith("554")&&!secretOpen&&!superSecretOpen)openSecret()});
     function openSecret(){secretOpen=true;document.title="Welcome to my secret games!";$("secretOverlay").classList.add("open");document.body.style.overflow="hidden";renderSecretGames()}
     function closeSecret(){secretOpen=false;document.title="Mist's Games For School";$("secretOverlay").classList.remove("open");document.body.style.overflow="";keyBuffer="";closeSecretFrame()}
-    function renderSecretGames(){$("secretGrid").innerHTML=SECRET_GAMES.map((g,i)=>{const ic=CAT_ICONS[g.cat]||CAT_ICONS.Horror;return`<a class="game-btn-card" href="${webfuseUrl(g.url)}" target="_blank" rel="noopener" style="animation-delay:${i*60}ms"><div class="game-btn-icon">${ic}</div><div class="game-btn-text"><span class="btn-title">${g.title}</span><span class="btn-cat">${g.cat}</span></div><span class="game-btn-arrow">${IC.arrow}</span></a>`}).join("")}
+    function renderSecretGames(){$("secretGrid").innerHTML=SECRET_GAMES.map((g,i)=>{const ic=CAT_ICONS[g.cat]||CAT_ICONS.Horror;const safeUrl=g.url.replace(/'/g,"\\'");return`<a class="game-btn-card" href="javascript:void(0)" style="animation-delay:${i*60}ms" onclick="openGame('${safeUrl}')"><div class="game-btn-icon">${ic}</div><div class="game-btn-text"><span class="btn-title">${g.title}</span><span class="btn-cat">${g.cat}</span></div><span class="game-btn-arrow">${IC.arrow}</span></a>`}).join("")}
     function openSuperSecret(){superSecretOpen=true;document.title="Welcome to the hidden games vault!";$("superSecretOverlay").classList.add("open");document.body.style.overflow="hidden";renderSuperSecretGames()}
     function closeSuperSecret(){superSecretOpen=false;document.title="Mist's Games For School";$("superSecretOverlay").classList.remove("open");document.body.style.overflow="";keyBuffer=""}
     function renderSuperSecretGames(){
         if(!SUPER_SECRET_GAMES.length){$("superSecretGrid").innerHTML=`<div class="empty-state">${IC.heartEmpty}<h3>No games added yet</h3><p>Add games to the SUPER_SECRET_GAMES array in the script.</p></div>`;return}
-        $("superSecretGrid").innerHTML=SUPER_SECRET_GAMES.map((g,i)=>{const ic=CAT_ICONS[g.cat]||CAT_ICONS.Arcade;return`<a class="game-btn-card" href="${webfuseUrl(g.url)}" target="_blank" rel="noopener" style="animation-delay:${i*60}ms"><div class="game-btn-icon">${ic}</div><div class="game-btn-text"><span class="btn-title">${g.title}</span><span class="btn-cat">${g.cat}</span></div><span class="game-btn-arrow">${IC.arrow}</span></a>`}).join("")
+        $("superSecretGrid").innerHTML=SUPER_SECRET_GAMES.map((g,i)=>{const ic=CAT_ICONS[g.cat]||CAT_ICONS.Arcade;const safeUrl=g.url.replace(/'/g,"\\'");return`<a class="game-btn-card" href="javascript:void(0)" style="animation-delay:${i*60}ms" onclick="openGame('${safeUrl}')"><div class="game-btn-icon">${ic}</div><div class="game-btn-text"><span class="btn-title">${g.title}</span><span class="btn-cat">${g.cat}</span></div><span class="game-btn-arrow">${IC.arrow}</span></a>`}).join("")
     }
 
 
