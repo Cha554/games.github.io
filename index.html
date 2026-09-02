@@ -33,10 +33,12 @@
 
     /* --- BACKGROUND LAYERS --- */
     .bg-dots{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(circle,var(--border) 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(ellipse 70% 50% at 50% 20%,black 15%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 70% 50% at 50% 20%,black 15%,transparent 70%)}
-    .bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 700px 500px at 25% 15%,var(--glow1) 0%,transparent 70%),radial-gradient(ellipse 500px 400px at 75% 70%,var(--glow2) 0%,transparent 70%),radial-gradient(ellipse 400px 300px at 50% 50%,var(--glow1) 0%,transparent 70%);animation:glowShift 22s ease-in-out infinite alternate}
-    @keyframes glowShift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(20px,-15px) scale(1.04)}100%{transform:translate(-10px,10px) scale(.97)}}
-    .cursor-glow{position:fixed;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,var(--accent-g) 0%,transparent 55%);pointer-events:none;z-index:0;filter:blur(10px);will-change:transform;transform:translate(-210px,-210px);transition:opacity .3s}
-    @media(hover:none){.cursor-glow{display:none}}
+    #cursor-trail{
+        position:fixed;inset:0;z-index:0;
+        pointer-events:none;
+        width:100%;height:100%;
+    }
+    @media(hover:none){#cursor-trail{display:none}}
 
     /* --- NAV --- */
     nav{position:fixed;top:0;width:100%;z-index:100;padding:1rem 0;transition:all .4s cubic-bezier(.16,1,.3,1);border-bottom:1px solid transparent}
@@ -81,12 +83,27 @@
 
     /* --- GRID --- */
     .grid-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem}
-    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .3s cubic-bezier(.16,1,.3,1);position:relative;display:flex;flex-direction:column;opacity:0;transform:translateY(14px)}
+    .card{
+        background:var(--bg-card);
+        border:1px solid var(--border);
+        border-radius:var(--radius);
+        overflow:hidden;
+        cursor:pointer;
+        transition:transform .3s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .3s,opacity .3s;
+        position:relative;
+        display:flex;
+        flex-direction:column;
+        opacity:0;
+        transform:translateY(14px);
+        /* Critical performance: skip rendering work for off-screen cards */
+        content-visibility:auto;
+        contain-intrinsic-size:auto 200px;
+    }
     .card.visible{opacity:1;transform:translateY(0)}
     .card:hover{transform:translateY(-6px);border-color:var(--border-h);box-shadow:0 14px 36px var(--shadow),0 0 20px var(--accent-g)}
     .card-thumb-container{width:100%;height:130px;overflow:hidden;background:var(--bg-el);position:relative}
     .movie-mode .card-thumb-container{height:300px}
-    .card-thumb{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;display:block}
+    .card-thumb{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;display:block;background:var(--bg-el)}
     .card:hover .card-thumb{transform:scale(1.06)}
     .card-info{padding:.85rem 1rem;text-align:left;border-top:1px solid var(--border)}
     .card-title{font-family:'Fraunces',serif;font-weight:600;font-size:.9rem;color:var(--fg);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -103,6 +120,81 @@
     footer p{color:var(--fg3);font-size:.85rem}
     footer b{color:var(--accent-h)}
 
+    /* --- WELCOME POPUP --- */
+    #welcome-overlay{
+        position:fixed;inset:0;z-index:100000;
+        background:rgba(0,0,0,.82);
+        display:flex;align-items:center;justify-content:center;
+        padding:1.25rem;
+        animation:fadeIn .35s ease-out;
+        backdrop-filter:blur(6px);
+        -webkit-backdrop-filter:blur(6px);
+    }
+    #welcome-modal{
+        background:var(--bg-card);
+        border:1px solid var(--border-h);
+        border-radius:var(--radius);
+        max-width:440px;width:100%;
+        padding:1.75rem 1.6rem 1.4rem;
+        box-shadow:0 20px 50px var(--shadow),0 0 30px var(--accent-g);
+        text-align:center;
+        animation:fadeUp .4s cubic-bezier(.16,1,.3,1) .1s both;
+    }
+    #welcome-modal h2{
+        font-family:'Fraunces',serif;
+        font-size:1.35rem;
+        font-weight:700;
+        color:var(--fg);
+        margin-bottom:.85rem;
+        letter-spacing:-.02em;
+    }
+    #welcome-modal p{
+        font-size:.9rem;
+        color:var(--fg2);
+        line-height:1.65;
+        margin-bottom:.7rem;
+    }
+    #welcome-modal a{
+        color:var(--accent-h);
+        text-decoration:none;
+        font-weight:600;
+        transition:color .2s;
+    }
+    #welcome-modal a:hover{color:var(--warm);text-decoration:underline}
+    #welcome-ok{
+        margin-top:1.15rem;
+        width:100%;
+        padding:.75rem 1.2rem;
+        border:none;
+        border-radius:99px;
+        background:var(--accent);
+        color:#1e1812;
+        font-family:inherit;
+        font-size:.95rem;
+        font-weight:700;
+        cursor:pointer;
+        transition:all .25s;
+        box-shadow:0 4px 14px var(--accent-g);
+    }
+    #welcome-ok:disabled{
+        background:var(--fg3);
+        color:var(--bg-el);
+        cursor:not-allowed;
+        box-shadow:none;
+        opacity:.7;
+    }
+    #welcome-ok:not(:disabled):hover{
+        background:var(--accent-h);
+        transform:translateY(-2px);
+        box-shadow:0 6px 20px var(--accent-gs);
+    }
+    #welcome-timer{
+        font-size:.78rem;
+        color:var(--fg3);
+        margin-top:.55rem;
+        min-height:1.2em;
+    }
+
     @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes fadeOut{from{opacity:1}to{opacity:0}}
@@ -115,14 +207,30 @@
         .hero h1{font-size:clamp(2rem,8vw,3rem)}
         .grid-container{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
         .movie-mode .card-thumb-container{height:220px}
+        .card{contain-intrinsic-size:auto 180px}
+        #welcome-modal{padding:1.4rem 1.2rem 1.2rem}
     }
 </style>
 </head>
 <body>
 
 <div class="bg-dots"></div>
-<div class="bg-glow"></div>
-<div class="cursor-glow" id="cursorGlow"></div>
+<canvas id="cursor-trail"></canvas>
+
+<!-- Welcome Popup -->
+<div id="welcome-overlay">
+    <div id="welcome-modal">
+        <h2>Thank You!</h2>
+        <p>Thank You, for using my games site! I made all of this myself along with a little help of AI for the design.</p>
+        <p>If you like my work please check out my other sites<br>
+            <a href="https://cha554.github.io/QL.github.io" target="_blank" rel="noopener">cha554.github.io/QL.github.io</a> <br>
+            <a href="https://cha554.github.io/mist.github.io" target="_blank" rel="noopener">cha554.github.io/mist.github.io</a>
+        </p>
+        <p>Anyways that should be it! Enjoy My Site!</p>
+        <button id="welcome-ok" disabled>OK <span id="welcome-countdown">(5)</span></button>
+        <div id="welcome-timer"></div>
+    </div>
+</div>
 
 <nav id="nav">
     <div class="nav-inner">
@@ -150,7 +258,7 @@
     <h1> Mist's <span class="accent-text">Games</span></h1>
     <p class="hero-sub" id="main-subtitle">Made By Mist Services</p>
     <div class="hero-search">
-        <input type="text" id="searchBar" placeholder="Search..." onkeyup="filterItems()" aria-label="Search">
+        <input type="text" id="searchBar" placeholder="Search..." aria-label="Search">
         <span class="search-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </span>
@@ -178,7 +286,7 @@
 
 <script>
     // ---------------------------------------------------------
-    // 1. DATA LISTS
+    // 1. DATA LISTS (unchanged)
     // ---------------------------------------------------------
 
     const games = [
@@ -363,7 +471,7 @@
         { name: "Merge Fellas", url: "https://script.google.com/macros/s/AKfycbxKeACMsdA3N71Rk2wolGOxrBqYz9UXnTo0o_Z4nvyh-z0SjoPO5UnfTLQXgsZQey4a/exec" },
         { name: "Pool 8 3D", url: "https://script.google.com/macros/s/AKfycbwgNIFE-Y2ckj1yfL215QDByY61L8tOiBJUC2IppZmScK2wrOVoEMjilX2f-TdEYN3N/exec" },
         { name: "Endless War", url: "https://script.google.com/macros/s/AKfycbx0g5BUL99BiBoQcEUYIFlFifyjxIR92tS8WWNAqEZnUx9ePaoEEZnO2CfcGHNUU2lRMQ/exec" },
-        { name: "Zombie Siege", url: "https://script.google.com/macros/s/AKfycbxUErJUc_ACvigcRFz3qfnoGUqikZVKUfKZekuAeEEfqCBKS-9WQF8XXJqyiH2kk85r/exec" },
+        { name: "Zombie Siege", url: "https://script.google.com/macros/s/AKfycbxUErJUc_ACvigcRFz3qfnoGUqikZVKekuAeEEfqCBKS-9WQF8XXJqyiH2kk85r/exec" },
         { name: "Hop Masters", url: "https://script.google.com/macros/s/AKfycbwNy4zXsSbExk8y6K7XIeg68xNFxPG_06EXhu4dtlR8vyGfODTey-POqEXTxEi_HxboQQ/exec" },
         { name: "Steal Brainrot 2", url: "https://script.google.com/macros/s/AKfycbxJalyip_ETy_kolDAlSVxdcnLtn16P6gIoJ5kDwt1abHFX32SUJEOLCWU31veTffv2/exec" },
         { name: "Battle Soccer", url: "https://script.google.com/macros/s/AKfycbypNJTV2_4SaNeQ_yGszhhWdue30IzXRZnqpA9d3q9LnYVV_kulbaHCR_csPvFZ3MQf0A/exec" },
@@ -372,15 +480,15 @@
         { name: "FNF vs Fancy Pants 2", url: "https://kbhgames.com/game/friday-night-funkin-vs-fancy-pants-2" },
         { name: "FNF: Minecraft Creeper vs Steve", url: "https://kbhgames.com/game/fnf-minecraft-creeper-vs-steve" },
         { name: "FNF vs PARAPPA (Prince Fleaswallow)", url: "https://kbhgames.com/game/fnf-vs-parappa-prince-fleaswallow" },
-        { name: "Friday Night Funkin’ vs Cheese", url: "https://kbhgames.com/game/friday-night-funkin-vs-cheese" },
-        { name: "FNF: Expurgation RetroSpecter’s Remix", url: "https://kbhgames.com/game/fnf-expurgation-retrospecters-remix" },
+        { name: "Friday Night Funkin' vs Cheese", url: "https://kbhgames.com/game/friday-night-funkin-vs-cheese" },
+        { name: "FNF: Expurgation RetroSpecter's Remix", url: "https://kbhgames.com/game/fnf-expurgation-retrospecters-remix" },
         { name: "Fine Night Funkout VS Clippy", url: "https://kbhgames.com/game/fine-night-funkout-vs-clippy" },
         { name: "FNF Changed Mod", url: "https://kbhgames.com/game/friday-night-funkin-vs-the-changed-mod" },
         { name: "FNF vs Shaggy Remastered", url: "https://kbhgames.com/game/fnf-vs-shaggy-remastered" },
         { name: "Friday Night Funkin vs Weegeepie", url: "https://kbhgames.com/game/friday-night-funkin-vs-weegeepie" },
-        { name: "Friday Night Funkin’ vs Avenue", url: "https://kbhgames.com/game/friday-night-funkin-vs-avenue" },
-        { name: "Friday Night Bloxxin’ vs Roblox Noob", url: "https://kbhgames.com/game/friday-night-bloxxin-vs-roblox-noob" },
-        { name: "Friday Night Funkin’ vs Rosie", url: "https://kbhgames.com/game/friday-night-funkin-vs-rosie" },
+        { name: "Friday Night Funkin' vs Avenue", url: "https://kbhgames.com/game/friday-night-funkin-vs-avenue" },
+        { name: "Friday Night Bloxxin' vs Roblox Noob", url: "https://kbhgames.com/game/friday-night-bloxxin-vs-roblox-noob" },
+        { name: "Friday Night Funkin' vs Rosie", url: "https://kbhgames.com/game/friday-night-funkin-vs-rosie" },
         { name: "Drunken Wrestle", url: "https://kbhgames.com/game/drunken-wrestle" },
         { name: "FNF: Mid-Fight Masses Thicc Sarvente + Reanimated Ruv", url: "https://kbhgames.com/game/fnf-mid-fight-masses-thicc-sarvente-reanimated-ruv" },
         { name: "Friday Night Funkin vs Taylor", url: "https://kbhgames.com/game/friday-night-funkin-vs-taylor" },
@@ -390,7 +498,7 @@
         { name: "Friday Night Funkin vs Conner", url: "https://kbhgames.com/game/friday-night-funkin-vs-conner" },
         { name: "Pixel Samurai", url: "https://kbhgames.com/game/pixel-samurai" },
         { name: "Friday Night Funkin Vs. GhostTwins", url: "https://kbhgames.com/game/friday-night-funkin-vs-ghosttwins" },
-        { name: "Friday Night Sandboxin’", url: "https://kbhgames.com/game/friday-night-sandboxin" },
+        { name: "Friday Night Sandboxin'", url: "https://kbhgames.com/game/friday-night-sandboxin" },
         { name: "Friday Night Funkin vs OMORI", url: "https://kbhgames.com/game/friday-night-funkin-vs-omori" },
         { name: "FNF vs KOU (Kepler Observation Unit)", url: "https://kbhgames.com/game/friday-nigh-funkin-vs-kou-kepler-observation-unit" },
         { name: "FNF: High Effort Test", url: "https://kbhgames.com/game/fnf-high-effort-test" },
@@ -405,11 +513,11 @@
         { name: "FNF Character Test Playground", url: "https://kbhgames.com/game/friday-night-funkin-character-test-playground" },
         { name: "FNF: Mom vs Dad Divorcin Court", url: "https://kbhgames.com/game/friday-night-funkin-mom-vs-dad-divorcin-court" },
         { name: "FNF vs Amogus: Among Us Drip", url: "https://kbhgames.com/game/fnf-vs-amogus-among-us-drip" },
-        { name: "Flip ‘n Fall", url: "https://kbhgames.com/game/flip-n-fall" },
+        { name: "Flip 'n Fall", url: "https://kbhgames.com/game/flip-n-fall" },
         { name: "Friday Night Funkin vs Codist", url: "https://kbhgames.com/game/friday-night-funkin-vs-codist" },
         { name: "Zombie Mission 8", url: "https://kbhgames.com/game/zombie-mission-8" },
         { name: "FNF vs Coralie: Peculiar Colours", url: "https://kbhgames.com/game/friday-night-funkin-vs-coralie-peculiar-colours" },
-        { name: "Friday Night Funkin’ vs Faraday", url: "https://kbhgames.com/game/friday-night-funkin-vs-faraday" },
+        { name: "Friday Night Funkin' vs Faraday", url: "https://kbhgames.com/game/friday-night-funkin-vs-faraday" },
         { name: "FNF: Zardy Foolhardy Mod Pack", url: "https://kbhgames.com/game/fnf-zardy-foolhardy-mod-pack" },
         { name: "Friday Night Funkin vs Knight", url: "https://kbhgames.com/game/friday-night-funkin-vs-knight" },
         { name: "Friday Night Funkin vs Plate", url: "https://kbhgames.com/game/friday-night-funkin-vs-plate" },
@@ -464,7 +572,7 @@
         { name: "Troll Face Quest Video Games 2", url: "https://kbhgames.com/game/troll-face-quest-video-games-2" },
         { name: "Big Shot Boxing", url: "https://kbhgames.com/game/big-shot-boxing" },
         { name: "Pass Me", url: "https://kbhgames.com/game/pass-me" },
-        { name: "Surf’s Up Cartoon", url: "https://kbhgames.com/game/surfs-up" },
+        { name: "Surf's Up Cartoon", url: "https://kbhgames.com/game/surfs-up" },
         { name: "FNF Vs. Tricky Version 2.0 (Phase 3)", url: "https://kbhgames.com/game/fnf-vs-tricky-version-2-0" },
         { name: "FNF vs Impostor Among Us v2", url: "https://kbhgames.com/game/friday-night-funkin-vs-impostor-among-us" },
         { name: "Friday Night Funkin vs Shaggy v2", url: "https://kbhgames.com/game/friday-night-funkin-vs-shaggy" },
@@ -475,7 +583,7 @@
         { name: "Friday Night Funkin Vs. Sans", url: "https://kbhgames.com/game/friday-night-funkin-vs-sans" },
         { name: "FNF: Starlight Mayhem", url: "https://kbhgames.com/game/friday-night-funkin-starlight-mayhem" },
         { name: "FNF SMG4 – If Mario Was In FNF Mod Pack", url: "https://kbhgames.com/game/fnf-smg4-if-mario-was-in-fnf-mod-pack" },
-        { name: "FNF: Funkin’ Nights at Freddy’s", url: "https://kbhgames.com/game/fnf-funkin-nights-at-freddys" },
+        { name: "FNF: Funkin' Nights at Freddy's", url: "https://kbhgames.com/game/fnf-funkin-nights-at-freddys" },
         { name: "FNF: Fanmade Vs. Tricky Phase 3", url: "https://kbhgames.com/game/fnf-fanmade-vs-tricky-phase-3" },
         { name: "Friday Night Funkin vs Starving Artist", url: "https://kbhgames.com/game/friday-night-funkin-vs-starving-artist" },
         { name: "Friday Night Funkin vs Trollface/Trollge", url: "https://kbhgames.com/game/fnf-vs-vs-trollface-trollge" },
@@ -490,9 +598,9 @@
         { name: "FNF: The Blueballs Incident (Trollge)", url: "https://kbhgames.com/game/fnf-the-blueballs-incident-trollge" },
         { name: "FNF: Friday Night Gaming vs Loki", url: "https://kbhgames.com/game/fnf-friday-night-gaming-vs-loki" },
         { name: "FNF Vs Garcello Retrospecter Release", url: "https://kbhgames.com/game/fnf-vs-garcello-retrospecter-release-remix" },
-        { name: "FNF: Viernes Night Funkin’", url: "https://kbhgames.com/game/fnf-viernes-night-funkin" },
+        { name: "FNF: Viernes Night Funkin'", url: "https://kbhgames.com/game/fnf-viernes-night-funkin" },
         { name: "FNF: Pico Night Funkin", url: "https://kbhgames.com/game/fnf-pico-night-funkin" },
-        { name: "FNF Internet’s Down", url: "https://kbhgames.com/game/fnf-internets-down" },
+        { name: "FNF Internet's Down", url: "https://kbhgames.com/game/fnf-internets-down" },
         { name: "Friday Night Funkin vs Dusttale Sans", url: "https://kbhgames.com/game/friday-night-funkin-vs-dusttale-sans" },
         { name: "FNF vs Crazy Girlfriend", url: "https://kbhgames.com/game/fnf-vs-crazy-girlfriend" },
         { name: "FNF: Eddsworlds Funky Beats", url: "https://kbhgames.com/game/fnf-eddsworlds-funky-beats" },
@@ -502,50 +610,50 @@
         { name: "FNF: Cuphead a Noisy Adventure!", url: "https://kbhgames.com/game/fnf-cuphead-a-noisy-adventure" },
         { name: "FNF vs Matt WIIK 3 (Fanmade)", url: "https://kbhgames.com/game/fnf-vs-matt-wiik-3-fanmade" },
         { name: "Friday Night Funkin UpSide", url: "https://kbhgames.com/game/friday-night-funkin-upside" },
-        { name: "Friday Night Funkin’ VS Cyrix", url: "https://kbhgames.com/game/friday-night-funkin-vs-cyrix" },
+        { name: "Friday Night Funkin' VS Cyrix", url: "https://kbhgames.com/game/friday-night-funkin-vs-cyrix" },
         { name: "Friday Night Funkin: MCYT ModPack", url: "https://kbhgames.com/game/friday-night-funkin-mcyt-modpack" },
         { name: "FNF: Tabi Genocide Retrospecter Remix", url: "https://kbhgames.com/game/fnf-tabi-genocide-retrospecter-remix" },
         { name: "FNF Clay Mod", url: "https://kbhgames.com/game/fnf-clay-mod" },
         { name: "Friday Night Funkin V.S. Sanford", url: "https://kbhgames.com/game/friday-night-funkin-v-s-sanford" },
-        { name: "Friday Night Funkin’ Sarvente’s Mid-Fight Masses", url: "https://kbhgames.com/game/friday-night-funkin-sarventes-mid-fight-masses" },
-        { name: "Friday Night Funkin’ V.S. Whitty Full Week", url: "https://kbhgames.com/game/friday-night-funkin-v-s-whitty-full-week" },
+        { name: "Friday Night Funkin' Sarvente's Mid-Fight Masses", url: "https://kbhgames.com/game/friday-night-funkin-sarventes-mid-fight-masses" },
+        { name: "Friday Night Funkin' V.S. Whitty Full Week", url: "https://kbhgames.com/game/friday-night-funkin-v-s-whitty-full-week" },
         { name: "Friday Night Funkin VS Sky Full Week", url: "https://kbhgames.com/game/friday-night-funkin-vs-sky-full-week" },
         { name: "Friday Night Funkin VS Garcello", url: "https://kbhgames.com/game/friday-night-funkin-vs-garcello" },
-        { name: "Friday Night Funkin’ Vs Tricky the Clown Mod", url: "https://kbhgames.com/game/friday-night-funkin-the-tricky-mod" },
+        { name: "Friday Night Funkin' Vs Tricky the Clown Mod", url: "https://kbhgames.com/game/friday-night-funkin-the-tricky-mod" },
         { name: "Friday Night Funkin Vs. Hex Mod Full Week", url: "https://kbhgames.com/game/friday-night-funkin-vs-hex-mod-full-week" },
-        { name: "Friday Night Funkin’ + Hatsune Miku", url: "https://kbhgames.com/game/friday-night-funkin-hatsune-miku" },
+        { name: "Friday Night Funkin' + Hatsune Miku", url: "https://kbhgames.com/game/friday-night-funkin-hatsune-miku" },
         { name: "Bleach Vs Naruto 3.3", url: "https://kbhgames.com/game/bleach-vs-naruto-3" },
         { name: "Friday Night Funkin, but Bad", url: "https://kbhgames.com/game/friday-night-funkin-but-bad" },
         { name: "Temple Run 2 Online", url: "https://kbhgames.com/game/temple-run-2-online" },
         { name: "FNF vs Tord/Tom/Edd", url: "https://kbhgames.com/game/friday-night-funkin-vs-tord" },
         { name: "Friday Night Funkin HD", url: "https://kbhgames.com/game/friday-night-funkin-hd" },
-        { name: "Friday Night Funkin’ Neo", url: "https://kbhgames.com/game/friday-night-funkin-neo" },
-        { name: "Five Nights at Freddy’s 2", url: "https://kbhgames.com/game/five-nights-freddys-2" },
-        { name: "Friday Night Funkin’ B-Side Remixes", url: "https://kbhgames.com/game/friday-night-funkin-b-side-remixes" },
+        { name: "Friday Night Funkin' Neo", url: "https://kbhgames.com/game/friday-night-funkin-neo" },
+        { name: "Five Nights at Freddy's 2", url: "https://kbhgames.com/game/five-nights-freddys-2" },
+        { name: "Friday Night Funkin' B-Side Remixes", url: "https://kbhgames.com/game/friday-night-funkin-b-side-remixes" },
         { name: "Friday Night Funkin Vs Matt 2.0", url: "https://kbhgames.com/game/friday-night-funkin-vs-matt-from-wii-sports" },
         { name: "FNF: V.S. Tankman High Effort Ugh 2.0", url: "https://kbhgames.com/game/fnf-v-s-tankman-high-effort-ugh-2-0" },
         { name: "Bullet Force", url: "https://kbhgames.com/game/bullet-force" },
         { name: "Friday Night Funkin VS. KAPI", url: "https://kbhgames.com/game/friday-night-funkin-vs-kapi" },
         { name: "Friday Night Funkin: Sonic Skin Mod", url: "https://kbhgames.com/game/friday-night-funkin-sonic-skin-mod" },
         { name: "Friday Night Funkin VS Carol v2", url: "https://kbhgames.com/game/friday-night-funkin-vs-carol-v2" },
-        { name: "Friday Night Funkin’: Foned In (FNF Mobile)", url: "https://kbhgames.com/game/friday-night-funkin-foned-in-fnf-mobile" },
+        { name: "Friday Night Funkin': Foned In (FNF Mobile)", url: "https://kbhgames.com/game/friday-night-funkin-foned-in-fnf-mobile" },
         { name: "Your Turn To Die", url: "https://kbhgames.com/game/your-turn-to-die" },
         { name: "FNF: Everywhere At The End Of Funk", url: "https://kbhgames.com/game/fnf-everywhere-at-the-end-of-funk" },
-        { name: "FNF: Friday Night Vibin’ UTAU Cover", url: "https://kbhgames.com/game/fnf-friday-night-vibin-utau-cover" },
+        { name: "FNF: Friday Night Vibin' UTAU Cover", url: "https://kbhgames.com/game/fnf-friday-night-vibin-utau-cover" },
         { name: "Light Platinum", url: "https://kbhgames.com/game/pokemon-light-platinum" },
-        { name: "Friday Night Funkin’ Duo Pack", url: "https://kbhgames.com/game/friday-night-funkin-duo-pack" },
-        { name: "Friday Night Funkin’ CG5 Edition Full Week", url: "https://kbhgames.com/game/friday-night-funkin-cg5-edition-full-week" },
+        { name: "Friday Night Funkin' Duo Pack", url: "https://kbhgames.com/game/friday-night-funkin-duo-pack" },
+        { name: "Friday Night Funkin' CG5 Edition Full Week", url: "https://kbhgames.com/game/friday-night-funkin-cg5-edition-full-week" },
         { name: "Sonic Classic Heroes", url: "https://kbhgames.com/game/sonic-classic-heroes" },
-        { name: "Friday Night Funkin’ B3 REMIXED", url: "https://kbhgames.com/game/friday-night-funkin-b3-remixed" },
+        { name: "Friday Night Funkin' B3 REMIXED", url: "https://kbhgames.com/game/friday-night-funkin-b3-remixed" },
         { name: "FNF Vs Zardy & Ronald Mcdonald", url: "https://kbhgames.com/game/vs-zardy-ronald-mcdonald" },
-        { name: "Friday Night Funkin’ With Shyrell MOD", url: "https://kbhgames.com/game/friday-night-funkin-with-shyrell-mod" },
+        { name: "Friday Night Funkin' With Shyrell MOD", url: "https://kbhgames.com/game/friday-night-funkin-with-shyrell-mod" },
         { name: "Floating Sandbox", url: "https://kbhgames.com/game/floating-sandbox" },
-        { name: "Five Nights at Freddy’s", url: "https://kbhgames.com/game/five-nights-freddys-online" },
+        { name: "Five Nights at Freddy's", url: "https://kbhgames.com/game/five-nights-freddys-online" },
         { name: "Ash Gray", url: "https://kbhgames.com/game/pokemon-ash-gray" },
-        { name: "The World’s Easyest Game", url: "https://kbhgames.com/game/the-world-easyest-game" },
+        { name: "The World's Easyest Game", url: "https://kbhgames.com/game/the-world-easyest-game" },
         { name: "Dragon Ball Z: Supersonic Warriors", url: "https://kbhgames.com/game/dragon-ball-z-supersonic-warriors" },
-        { name: "Friday Night Funkin’ vs Annie", url: "https://kbhgames.com/game/friday-night-funkin-vs-annie" },
-        { name: "Dragon Ball Z: Buu’s Fury", url: "https://kbhgames.com/game/dragon-ball-z-buus-fury" },
+        { name: "Friday Night Funkin' vs Annie", url: "https://kbhgames.com/game/friday-night-funkin-vs-annie" },
+        { name: "Dragon Ball Z: Buu's Fury", url: "https://kbhgames.com/game/dragon-ball-z-buus-fury" },
         { name: "Tank Trouble 4", url: "https://kbhgames.com/game/tank-trouble-4" },
         { name: "MADNESS: Off-Color", url: "https://kbhgames.com/game/madness-off-color" },
         { name: "Stick it to the Stickman", url: "https://kbhgames.com/game/stick-it-to-the-stickman" },
@@ -578,7 +686,7 @@
         { name: "Conduct THIS!", url: "https://kbhgames.com/game/conduct-this" },
         { name: "Admin", url: "https://kbhgames.com/game/admin" },
         { name: "Jumphase", url: "https://kbhgames.com/game/jumphase" },
-        { name: "I’m Outta Here", url: "https://kbhgames.com/game/im-outta-here" },
+        { name: "I'm Outta Here", url: "https://kbhgames.com/game/im-outta-here" },
         { name: "Pink", url: "https://kbhgames.com/game/pink" },
         { name: "Chill Out", url: "https://kbhgames.com/game/chill-out" },
         { name: "Alice in the maze", url: "https://kbhgames.com/game/alice-in-the-maze" },
@@ -627,7 +735,7 @@
         { name: "Stick War Legacy 2", url: "https://kbhgames.com/game/stick-war-legacy-2" },
         { name: "Castle Constructor", url: "https://kbhgames.com/game/castle-constructor" },
         { name: "Power The Grid", url: "https://kbhgames.com/game/power-the-grid" },
-        { name: "FE8: The Eligor’s Spear", url: "https://kbhgames.com/game/fe-8-the-eligors-spear" },
+        { name: "FE8: The Eligor's Spear", url: "https://kbhgames.com/game/fe-8-the-eligors-spear" },
         { name: "Guild Of Zany", url: "https://kbhgames.com/game/guild-of-zany" },
         { name: "Warfare Classic", url: "https://kbhgames.com/game/warfare-classic" },
         { name: "Assault Bots", url: "https://kbhgames.com/game/assault-bots" },
@@ -666,96 +774,47 @@
     ];
 
     // ---------------------------------------------------------
-    // ACTIVE USERS TRACKER
+    // ACTIVE USERS TRACKER (optimized: less frequent, less work)
     // ---------------------------------------------------------
     function initializeUserTracker() {
         const SESSION_KEY = 'mist_games_session_id';
         const USERS_KEY = 'mist_games_active_users';
         const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
-        // Create or get session ID
         let sessionId = sessionStorage.getItem(SESSION_KEY);
         if (!sessionId) {
             sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             sessionStorage.setItem(SESSION_KEY, sessionId);
         }
 
-        // Initialize or get active users object
-        let activeUsers = {};
-        const stored = localStorage.getItem(USERS_KEY);
-        if (stored) {
+        function tick() {
+            let activeUsers = {};
             try {
-                activeUsers = JSON.parse(stored);
-            } catch (e) {
-                activeUsers = {};
-            }
-        }
+                const stored = localStorage.getItem(USERS_KEY);
+                if (stored) activeUsers = JSON.parse(stored);
+            } catch (e) {}
 
-        // Add/update current session
-        activeUsers[sessionId] = Date.now();
-
-        // Clean up expired sessions
-        const now = Date.now();
-        Object.keys(activeUsers).forEach(id => {
-            if (now - activeUsers[id] > SESSION_TIMEOUT) {
-                delete activeUsers[id];
-            }
-        });
-
-        // Save updated users
-        localStorage.setItem(USERS_KEY, JSON.stringify(activeUsers));
-
-        // Update display
-        updateUserCount();
-
-        // Update periodically
-        setInterval(() => {
-            // Update current user's timestamp
-            let users = {};
-            const stored = localStorage.getItem(USERS_KEY);
-            if (stored) {
-                try {
-                    users = JSON.parse(stored);
-                } catch (e) {
-                    users = {};
-                }
-            }
-
-            users[sessionId] = Date.now();
-
-            // Clean up expired sessions
             const now = Date.now();
-            Object.keys(users).forEach(id => {
-                if (now - users[id] > SESSION_TIMEOUT) {
-                    delete users[id];
-                }
-            });
+            activeUsers[sessionId] = now;
 
-            localStorage.setItem(USERS_KEY, JSON.stringify(users));
-            updateUserCount();
-        }, 5000); // Update every 5 seconds
-    }
-
-    function updateUserCount() {
-        const USERS_KEY = 'mist_games_active_users';
-        let activeUsers = {};
-        const stored = localStorage.getItem(USERS_KEY);
-        if (stored) {
-            try {
-                activeUsers = JSON.parse(stored);
-            } catch (e) {
-                activeUsers = {};
+            // Clean expired
+            for (const id in activeUsers) {
+                if (now - activeUsers[id] > SESSION_TIMEOUT) delete activeUsers[id];
             }
+
+            try {
+                localStorage.setItem(USERS_KEY, JSON.stringify(activeUsers));
+            } catch (e) {}
+
+            const countEl = document.getElementById('user-count');
+            if (countEl) countEl.textContent = Math.max(1, Object.keys(activeUsers).length);
         }
 
-        const count = Math.max(1, Object.keys(activeUsers).length);
-        const countEl = document.getElementById('user-count');
-        if (countEl) {
-            countEl.textContent = count;
-        }
+        tick();
+        // Reduced from 5s to 15s — still feels live, much less storage thrashing
+        setInterval(tick, 15000);
     }
 
-    // Start tracking when page loads
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initializeUserTracker);
     } else {
@@ -763,13 +822,75 @@
     }
 
     // ---------------------------------------------------------
-    // 2. GRID GENERATION
+    // WELCOME POPUP (must wait 5 seconds before OK)
+    // ---------------------------------------------------------
+    (function initWelcomePopup() {
+        const overlay = document.getElementById('welcome-overlay');
+        const okBtn = document.getElementById('welcome-ok');
+        const countdownEl = document.getElementById('welcome-countdown');
+        if (!overlay || !okBtn) return;
+
+        // Lock page interaction while popup is open
+        document.body.style.overflow = 'hidden';
+
+        let secondsLeft = 5;
+        const timer = setInterval(() => {
+            secondsLeft--;
+            if (secondsLeft > 0) {
+                countdownEl.textContent = `(${secondsLeft})`;
+            } else {
+                clearInterval(timer);
+                countdownEl.textContent = '';
+                okBtn.disabled = false;
+                okBtn.textContent = 'OK';
+            }
+        }, 1000);
+
+        okBtn.addEventListener('click', () => {
+            if (okBtn.disabled) return;
+            overlay.style.animation = 'fadeOut 0.25s ease-out forwards';
+            setTimeout(() => {
+                overlay.remove();
+                document.body.style.overflow = '';
+            }, 250);
+        });
+    })();
+
+    // ---------------------------------------------------------
+    // 2. GRID GENERATION + TRUE LAZY IMAGES
     // ---------------------------------------------------------
     const gameGrid = document.getElementById('game-grid');
     const movieGrid = document.getElementById('movie-grid');
 
-    games.forEach(game => gameGrid.appendChild(createCard(game, 'game')));
-    movies.forEach(movie => movieGrid.appendChild(createCard(movie, 'movie')));
+    // Shared IntersectionObserver for images (loads only when near viewport)
+    const imgObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            const img = entry.target;
+            const src = img.dataset.src;
+            if (src) {
+                img.src = src;
+                img.removeAttribute('data-src');
+            }
+            imgObserver.unobserve(img);
+        }
+    }, {
+        rootMargin: '300px 0px', // start loading a bit before visible
+        threshold: 0.01
+    });
+
+    // Shared observer for the fade-in "visible" class
+    const cardObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                cardObserver.unobserve(entry.target);
+            }
+        }
+    }, {
+        rootMargin: '50px 0px',
+        threshold: 0.05
+    });
 
     function createCard(item, type) {
         const card = document.createElement('div');
@@ -790,21 +911,45 @@
 
         card.innerHTML = `
             <div class="card-thumb-container">
-                <img src="${imgUrl}" class="card-thumb" onerror="this.src='${fallbackUrl}'" loading="lazy" alt="${item.name}">
+                <img data-src="${imgUrl}" class="card-thumb" onerror="this.onerror=null;this.src='${fallbackUrl}'" alt="${item.name}" decoding="async">
             </div>
             <div class="card-info">
                 <div class="card-title">${item.name}</div>
             </div>
         `;
+
+        const img = card.querySelector('img');
+        imgObserver.observe(img);
+        cardObserver.observe(card);
+
         return card;
     }
 
-    // reveal cards on load (staggered)
+    // Build with DocumentFragment for much faster initial insert
+    function buildGrid(items, container, type) {
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i < items.length; i++) {
+            frag.appendChild(createCard(items[i], type));
+        }
+        container.appendChild(frag);
+    }
+
+    buildGrid(games, gameGrid, 'game');
+    buildGrid(movies, movieGrid, 'movie');
+
+    // Lightweight staggered reveal for the first screenful only
     function revealCards(container) {
-        const cards = container.querySelectorAll('.card:not(.hidden)');
+        const cards = container.querySelectorAll('.card:not(.visible)');
+        // Only stagger the first ~24 cards for the initial "pop-in" feel
         cards.forEach((c, i) => {
-            c.style.transitionDelay = `${Math.min(i * 20, 400)}ms`;
-            requestAnimationFrame(() => c.classList.add('visible'));
+            if (i < 24) {
+                c.style.transitionDelay = `${Math.min(i * 25, 400)}ms`;
+            }
+            // The IntersectionObserver will add .visible when they enter view
+            // Force the first ones visible immediately so the page doesn't feel empty
+            if (i < 12) {
+                requestAnimationFrame(() => c.classList.add('visible'));
+            }
         });
     }
     revealCards(gameGrid);
@@ -812,7 +957,11 @@
     function updateCount() {
         const activeGrid = document.querySelector('.grid-container:not(.hidden)');
         if (!activeGrid) return;
-        const visible = [...activeGrid.children].filter(c => c.style.display !== 'none').length;
+        let visible = 0;
+        const children = activeGrid.children;
+        for (let i = 0; i < children.length; i++) {
+            if (children[i].style.display !== 'none') visible++;
+        }
         document.getElementById('itemCount').textContent = `${visible} item${visible !== 1 ? 's' : ''}`;
     }
 
@@ -846,15 +995,12 @@
     }
 
     // ---------------------------------------------------------
-    // 4. CLOAKED LAUNCHER
+    // 4. CLOAKED LAUNCHER (unchanged behavior)
     // ---------------------------------------------------------
     function launch(url) {
-        // For KBH Games, route through webfuse proxy
-        if (url.includes('kbhgames.com')) {
-            url = 'https://demo.webfuse.com/+iframetest?url=' + encodeURIComponent(url);
-        }
+        // Route all URLs through webfuse proxy
+        url = 'https://demo.webfuse.com/+iframetest?url=' + encodeURIComponent(url);
 
-        // Modal for all games
         const modal = document.createElement('div');
         modal.id = 'game-modal';
         modal.style.cssText = `
@@ -901,53 +1047,69 @@
 
         const closeModal = () => {
             modal.style.animation = 'fadeOut 0.2s ease-out forwards';
-            setTimeout(() => modal.remove(), 200);
+            setTimeout(() => {
+                modal.remove();
+                document.body.style.overflow = '';
+            }, 200);
         };
 
         closeBtn.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.getElementById('game-modal')) closeModal();
-        });
+
+        // Single keydown listener that cleans itself up
+        const escHandler = (e) => {
+            if (e.key === 'Escape' && document.getElementById('game-modal')) {
+                closeModal();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
 
         modal.appendChild(closeBtn);
         modal.appendChild(iframe);
         document.body.appendChild(modal);
         document.body.style.overflow = 'hidden';
-
-        const cleanupObserver = new MutationObserver(() => {
-            if (!document.getElementById('game-modal')) {
-                document.body.style.overflow = '';
-                cleanupObserver.disconnect();
-            }
-        });
-        cleanupObserver.observe(document.body, { childList: true });
     }
 
     // ---------------------------------------------------------
-    // 5. FILTER FUNCTION
+    // 5. FILTER FUNCTION (debounced)
     // ---------------------------------------------------------
+    let filterTimeout = null;
     function filterItems() {
-        const input = document.getElementById('searchBar').value.toLowerCase();
+        const input = document.getElementById('searchBar').value.toLowerCase().trim();
         const activeGrid = document.querySelector('.grid-container:not(.hidden)');
         if (!activeGrid) return;
 
         const cards = activeGrid.getElementsByClassName('card');
         for (let i = 0; i < cards.length; i++) {
-            const title = cards[i].querySelector('.card-title').innerText.toLowerCase();
-            const match = title.includes(input);
-            cards[i].style.display = match ? "flex" : "none";
+            const title = cards[i].querySelector('.card-title').textContent.toLowerCase();
+            cards[i].style.display = (!input || title.includes(input)) ? '' : 'none';
         }
         updateCount();
     }
 
+    // Debounce the live search so typing doesn't thrash the DOM on every keystroke
+    document.getElementById('searchBar').addEventListener('input', () => {
+        clearTimeout(filterTimeout);
+        filterTimeout = setTimeout(filterItems, 120);
+    });
+
     // ---------------------------------------------------------
-    // 6. NAV SCROLL + MOBILE MENU + CURSOR GLOW
+    // 6. NAV SCROLL + MOBILE MENU + CURSOR GLOW (optimized)
     // ---------------------------------------------------------
     const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 30), { passive: true });
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+        if (!scrollTicking) {
+            requestAnimationFrame(() => {
+                nav.classList.toggle('scrolled', window.scrollY > 30);
+                scrollTicking = false;
+            });
+            scrollTicking = true;
+        }
+    }, { passive: true });
 
     document.getElementById('mobileToggle').addEventListener('click', () => {
         document.getElementById('navLinks').classList.toggle('open');
@@ -958,16 +1120,202 @@
         document.getElementById('navLinks').classList.remove('open');
     }
 
-    const cursorGlow = document.getElementById('cursorGlow');
-    let glowX = -210, glowY = -210;
-    document.addEventListener('mousemove', e => { glowX = e.clientX; glowY = e.clientY; });
-    document.addEventListener('mouseleave', () => cursorGlow.style.opacity = '0');
-    document.addEventListener('mouseenter', () => cursorGlow.style.opacity = '1');
-    (function animGlow() {
-        cursorGlow.style.transform = `translate(${glowX - 210}px, ${glowY - 210}px)`;
-        requestAnimationFrame(animGlow);
+    // Cool cursor trail – smooth glowing line + warm ember particles
+    (function initCursorTrail() {
+        if (!window.matchMedia('(hover: hover)').matches) return;
+
+        const canvas = document.getElementById('cursor-trail');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let w, h, dpr;
+        const particles = [];
+        const MAX = 50;
+        const path = [];           // recent mouse positions for the smooth line
+        const PATH_LEN = 22;       // how long the trail line is
+        let mx = -999, my = -999;
+        let lastX = -999, lastY = -999;
+        let running = true;
+
+        function resize() {
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            w = window.innerWidth;
+            h = window.innerHeight;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        resize();
+        window.addEventListener('resize', resize, { passive: true });
+
+        document.addEventListener('mousemove', e => {
+            mx = e.clientX;
+            my = e.clientY;
+        }, { passive: true });
+
+        document.addEventListener('mouseleave', () => {
+            mx = -999; my = -999;
+            path.length = 0;
+        });
+        document.addEventListener('mouseenter', e => {
+            mx = e.clientX; my = e.clientY;
+        });
+
+        // Warm palette matching the site
+        const colors = [
+            [200, 149, 108],
+            [232, 164, 74],
+            [218, 168, 130],
+            [180, 120, 70],
+            [255, 200, 120]
+        ];
+
+        function spawn(x, y, speed) {
+            const c = colors[(Math.random() * colors.length) | 0];
+            const angle = Math.random() * Math.PI * 2;
+            const vel = 0.25 + Math.random() * 1.2 + speed * 0.12;
+            particles.push({
+                x, y,
+                vx: Math.cos(angle) * vel * (0.35 + Math.random()),
+                vy: Math.sin(angle) * vel * (0.35 + Math.random()) - 0.35,
+                life: 1,
+                decay: 0.014 + Math.random() * 0.02,
+                size: 1.4 + Math.random() * 3.2 + speed * 0.07,
+                r: c[0], g: c[1], b: c[2],
+                glow: 0.4 + Math.random() * 0.55
+            });
+            if (particles.length > MAX) particles.shift();
+        }
+
+        function frame() {
+            if (!running) return;
+            ctx.clearRect(0, 0, w, h);
+
+            if (mx > -100) {
+                const dx = mx - lastX;
+                const dy = my - lastY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const speed = Math.min(dist, 40);
+
+                // Record path point
+                path.push({ x: mx, y: my });
+                if (path.length > PATH_LEN) path.shift();
+
+                // Spawn particles
+                if (dist > 1.5 || Math.random() < 0.3) {
+                    const count = 1 + (speed > 10 ? 1 : 0);
+                    for (let i = 0; i < count; i++) {
+                        spawn(mx + (Math.random() - 0.5) * 8, my + (Math.random() - 0.5) * 8, speed);
+                    }
+                }
+                lastX = mx;
+                lastY = my;
+            } else if (path.length) {
+                // Fade the path out when mouse leaves
+                path.shift();
+            }
+
+            ctx.globalCompositeOperation = 'lighter';
+
+            // --- Smooth glowing line ---
+            if (path.length > 2) {
+                // Soft outer glow
+                ctx.beginPath();
+                ctx.moveTo(path[0].x, path[0].y);
+                for (let i = 1; i < path.length - 1; i++) {
+                    const xc = (path[i].x + path[i + 1].x) / 2;
+                    const yc = (path[i].y + path[i + 1].y) / 2;
+                    ctx.quadraticCurveTo(path[i].x, path[i].y, xc, yc);
+                }
+                const last = path[path.length - 1];
+                ctx.lineTo(last.x, last.y);
+
+                ctx.strokeStyle = 'rgba(200,149,108,0.12)';
+                ctx.lineWidth = 14;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+
+                // Mid glow
+                ctx.beginPath();
+                ctx.moveTo(path[0].x, path[0].y);
+                for (let i = 1; i < path.length - 1; i++) {
+                    const xc = (path[i].x + path[i + 1].x) / 2;
+                    const yc = (path[i].y + path[i + 1].y) / 2;
+                    ctx.quadraticCurveTo(path[i].x, path[i].y, xc, yc);
+                }
+                ctx.lineTo(last.x, last.y);
+                ctx.strokeStyle = 'rgba(232,164,74,0.28)';
+                ctx.lineWidth = 6;
+                ctx.stroke();
+
+                // Bright core (fades toward the tail)
+                for (let i = 1; i < path.length; i++) {
+                    const t = i / (path.length - 1);          // 0 = tail, 1 = head
+                    const alpha = 0.15 + t * 0.75;
+                    const width = 1.2 + t * 2.8;
+
+                    ctx.beginPath();
+                    const prev = path[i - 1];
+                    const curr = path[i];
+                    // smooth segment
+                    if (i < path.length - 1) {
+                        const next = path[i + 1];
+                        const xc = (curr.x + next.x) / 2;
+                        const yc = (curr.y + next.y) / 2;
+                        ctx.moveTo(prev.x, prev.y);
+                        ctx.quadraticCurveTo(curr.x, curr.y, xc, yc);
+                    } else {
+                        ctx.moveTo(prev.x, prev.y);
+                        ctx.lineTo(curr.x, curr.y);
+                    }
+                    ctx.strokeStyle = `rgba(255,210,150,${alpha})`;
+                    ctx.lineWidth = width;
+                    ctx.lineCap = 'round';
+                    ctx.stroke();
+                }
+            }
+
+            // --- Particles ---
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.life -= p.decay;
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vx *= 0.97;
+                p.vy *= 0.97;
+                p.vy -= 0.015;
+
+                const alpha = p.life * p.glow;
+                const s = p.size * (0.4 + p.life * 0.6);
+
+                const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, s * 2.2);
+                grad.addColorStop(0, `rgba(${p.r},${p.g},${p.b},${alpha * 0.9})`);
+                grad.addColorStop(0.4, `rgba(${p.r},${p.g},${p.b},${alpha * 0.35})`);
+                grad.addColorStop(1, `rgba(${p.r},${p.g},${p.b},0)`);
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, s * 2.2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.globalCompositeOperation = 'source-over';
+            requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+
+        document.addEventListener('visibilitychange', () => {
+            running = !document.hidden;
+            if (running) requestAnimationFrame(frame);
+        });
     })();
 
+    // Panic swap (only when no modal is open)
     window.addEventListener('keydown', (e) => {
         if (e.key === "Escape" && !document.getElementById('game-modal')) {
             window.location.replace("https://drive.google.com");
