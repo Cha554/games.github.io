@@ -1867,12 +1867,23 @@
     });
 
     // ---------------------------------------------------------
-    // 4. CLOAKED LAUNCHER – about:blank + webfuse proxy
+    // 4. LAUNCHER – new tab
+    // Google Scripts open directly (no proxy); everything else uses webfuse proxy
     // ---------------------------------------------------------
+    function isGoogleScriptsUrl(url) {
+        try {
+            const u = new URL(url);
+            return u.hostname === 'script.google.com' ||
+                u.hostname.endsWith('.googleusercontent.com') ||
+                (u.hostname === 'docs.google.com' && /\/macros\//.test(u.pathname));
+        } catch (e) {
+            return /script\.google\.com/i.test(url);
+        }
+    }
+
     function launch(url, item) {
         if (item) addRecent(item);
         else {
-            // try recover name from games list
             const found = games.find(g => g.url === url) || movies.find(m => m.url === url);
             if (found) addRecent(found);
         }
@@ -1881,33 +1892,17 @@
             showToast("You're offline — this game may not load.");
         }
 
-        const proxied = 'https://demo.webfuse.com/+iframetest?url=' + encodeURIComponent(url);
-        const win = window.open('about:blank', '_blank');
-        if (!win) {
-            window.location.href = proxied;
+        // Google Scripts / Apps Script games → open normally (no proxy)
+        if (isGoogleScriptsUrl(url)) {
+            const win = window.open(url, '_blank');
+            if (!win) window.location.href = url;
             return;
         }
 
-        const title = document.title || "Google Drive";
-        const favicon = document.querySelector("link[rel*='icon']");
-        const favHref = favicon ? favicon.href : 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png';
-
-        win.document.write(`<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>${title.replace(/</g, '')}</title>
-<link rel="icon" href="${favHref}">
-<style>
-  html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000}
-  iframe{border:none;width:100%;height:100%;display:block}
-</style>
-</head>
-<body>
-<iframe src="${proxied}" allowfullscreen allow="fullscreen; autoplay; gamepad; clipboard-write"></iframe>
-</body>
-</html>`);
-        win.document.close();
+        // Everything else → webfuse proxy in a normal new tab (no about:blank)
+        const proxied = 'https://demo.webfuse.com/+iframetest?url=' + encodeURIComponent(url);
+        const win = window.open(proxied, '_blank');
+        if (!win) window.location.href = proxied;
     }
 
     // ---------------------------------------------------------
